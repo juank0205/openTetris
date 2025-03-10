@@ -10,8 +10,21 @@ target_include_directories(${PROJECT_NAME}_lib PUBLIC
     ${CMAKE_SOURCE_DIR}/external/glad/include
 )
 
-target_link_directories(${PROJECT_NAME}_lib PUBLIC 
-    ${CMAKE_SOURCE_DIR}/external/glfw/src
-)
+if(UNIX)
+    target_link_directories(${PROJECT_NAME}_lib PUBLIC 
+	${CMAKE_SOURCE_DIR}/external/glfw/linux/src
+    )
+    target_link_libraries(${PROJECT_NAME}_lib glfw3)
+elseif(WIN32)
+    target_link_directories(${PROJECT_NAME}_lib PUBLIC 
+	${CMAKE_SOURCE_DIR}/external/glfw/windows
+    )
+    target_link_libraries(${PROJECT_NAME}_lib glfw3)
+    
+    add_custom_command(TARGET ${PROJECT_NAME}_lib POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/external/glfw/windows/glfw3.dll
+        $<TARGET_FILE_DIR:${PROJECT_NAME}_lib>
+    )
+endif()
 
-target_link_libraries(${PROJECT_NAME}_lib glfw3)
