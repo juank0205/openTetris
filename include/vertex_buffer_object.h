@@ -5,15 +5,14 @@
 class VBO {
 
 public:
+  VBO(float *data, size_t size);
   VBO();
   ~VBO();
 
-  void setData(float *data, size_t size);
-
+  void bind();
 private:
   int size;
   unsigned int m_id;
 
-  void bind();
   void unbind();
 };

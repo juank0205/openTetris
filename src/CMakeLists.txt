@@ -2,6 +2,11 @@ add_library(${PROJECT_NAME}_lib STATIC
     glad/glad.c
     window_manager.cpp
     input_manager.cpp
+    program.cpp
+    renderer.cpp
+    shader.cpp
+    vertex_array_object.cpp
+    vertex_buffer_object.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_lib PUBLIC 

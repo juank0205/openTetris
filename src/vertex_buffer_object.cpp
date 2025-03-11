@@ -2,12 +2,17 @@
 
 #include <glad/glad.h>
 
-VBO::VBO() { glGenBuffers(1, &m_id); }
+VBO::VBO(float *data, size_t size) {
+  glGenBuffers(1, &m_id);
+  bind();
+  glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
+  unbind();
+}
+
+VBO::VBO() {}
+
+VBO::~VBO() {}
 
 void VBO::bind() { glBindBuffer(GL_ARRAY_BUFFER, m_id); }
 
 void VBO::unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
-
-void VBO::setData(float *data, size_t size) {
-  glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-}

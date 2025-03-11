@@ -1,13 +1,18 @@
 #include <iostream>
 
 #include "window_manager.h"
+#include "program.h"
+#include "shader.h"
+#include "vertex_array_object.h"
+#include "vertex_buffer_object.h"
 
 void frame_buffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
 WindowManager::WindowManager(int width, int height, const char *name)
-    : m_width(width), m_height(height), m_name(name), m_window(NULL) {
+    : m_width(width), m_height(height), m_name(name), m_window(NULL),
+      m_renderer(Renderer()) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -36,11 +41,16 @@ int WindowManager::createWindow() {
 }
 
 void WindowManager::startWindowLoop() {
+  m_renderer.setup();
+
   while (!glfwWindowShouldClose(m_window)) {
     m_inputManager.processInput(m_window);
 
+
     glClearColor(1.0f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    m_renderer.render();
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
