@@ -5,7 +5,7 @@
 VBO::VBO(float *data, size_t size) {
   glGenBuffers(1, &m_id);
   bind();
-  glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
   unbind();
 }
 

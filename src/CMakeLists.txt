@@ -7,6 +7,7 @@ add_library(${PROJECT_NAME}_lib STATIC
     shader.cpp
     vertex_array_object.cpp
     vertex_buffer_object.cpp
+    element_buffer_object.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_lib PUBLIC 

@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "element_buffer_object.h"
 #include "program.h"
 #include "shader.h"
 #include "vertex_array_object.h"
@@ -26,12 +27,17 @@ void Renderer::setup() {
   VAO vao;
   vao.bind();
 
-  float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
-  VBO vbo(vertices, 9);
+  float vertices[] = {-0.5f, -0.5f, 0.0f, -0.5f, 0.5f,  0.0f,
+                      0.5f,  0.5f,  0.0f, 0.5f,  -0.5f, 0.0f};
+  VBO vbo(vertices, sizeof(vertices));
   vbo.bind();
+
+  unsigned int indices[] = {0, 1, 2, 0, 2, 3};
+  EBO ebo(indices, sizeof(indices));
+  ebo.bind();
 
   vao.enable(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
   program.useProgram();
 }
 
-void Renderer::render() { glDrawArrays(GL_TRIANGLES, 0, 3); }
+void Renderer::render() { glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); }
