@@ -1,5 +1,7 @@
 add_library(${PROJECT_NAME}_lib STATIC 
     glad/glad.c
+    stb_image/stb_image.cpp
+    open_gl_calls.cpp
     window_manager.cpp
     input_manager.cpp
     program.cpp
@@ -8,13 +10,14 @@ add_library(${PROJECT_NAME}_lib STATIC
     vertex_array_object.cpp
     vertex_buffer_object.cpp
     element_buffer_object.cpp
-    open_gl_calls.cpp
+    texture.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_lib PUBLIC 
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/external/glfw/include
     ${CMAKE_SOURCE_DIR}/external/glad/include
+    ${CMAKE_SOURCE_DIR}/external/stb_image
 )
 
 if(UNIX)

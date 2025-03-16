@@ -2,6 +2,7 @@
 #include "element_buffer_object.h"
 #include "program.h"
 #include "shader.h"
+#include "texture.h"
 #include "vertex_array_object.h"
 #include "vertex_buffer_object.h"
 
@@ -27,10 +28,10 @@ void Renderer::setup() {
   vao.bind();
 
   float vertices[] = {
-      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, //
-      -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, 0.0f, //
-      0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, //
-      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, //
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,//
+      -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,//
+      0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,//
+      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,//
   };
 
   VBO vbo(vertices, sizeof(vertices));
@@ -39,10 +40,15 @@ void Renderer::setup() {
   unsigned int indices[] = {0, 1, 2, 0, 2, 3};
   EBO ebo(indices, sizeof(indices));
   ebo.bind();
+  
+  Texture text("res/textures/container.jpg");
+  text.bind();
 
-  glCall(vao.enable(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0));
-  glCall(vao.enable(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+  glCall(vao.enable(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0));
+  glCall(vao.enable(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                     3 * sizeof(float)));
+  glCall(vao.enable(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                    6 * sizeof(float)));
   program.useProgram();
 }
 
