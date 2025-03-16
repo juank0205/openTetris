@@ -6,13 +6,13 @@
 #include "vertex_buffer_object.h"
 
 #include "open_gl_calls.h"
+#include <GLFW/glfw3.h>
 
 Renderer::Renderer() {}
 
 Renderer::~Renderer() {}
 
 void Renderer::setup() {
-  Program program;
   {
     Shader vertex("res/shaders/vertex.vert", SHADER_TYPE_VERTEX);
     Shader fragment("res/shaders/fragment.frag", SHADER_TYPE_FRAGMENT);
@@ -26,8 +26,13 @@ void Renderer::setup() {
   VAO vao;
   vao.bind();
 
-  float vertices[] = {-0.5f, -0.5f, 0.0f, -0.5f, 0.5f,  0.0f,
-                      0.5f,  0.5f,  0.0f, 0.5f,  -0.5f, 0.0f};
+  float vertices[] = {
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, //
+      -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, 0.0f, //
+      0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, //
+      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, //
+  };
+
   VBO vbo(vertices, sizeof(vertices));
   vbo.bind();
 
@@ -35,8 +40,12 @@ void Renderer::setup() {
   EBO ebo(indices, sizeof(indices));
   ebo.bind();
 
-  glCall(vao.enable(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0));
+  glCall(vao.enable(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0));
+  glCall(vao.enable(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                    3 * sizeof(float)));
   program.useProgram();
 }
 
-void Renderer::render() { glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)); }
+void Renderer::render() {
+  glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+}

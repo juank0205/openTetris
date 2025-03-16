@@ -9,6 +9,9 @@ public:
   void attachShader(unsigned int shaderId);
   void linkShaders();
 
+  inline unsigned int getId() const {
+    return id;
+  }
 private:
   unsigned int id;
 

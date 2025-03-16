@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 
 #include "input_manager.h"
-#include "renderer.h"
 
 class WindowManager {
 public:
@@ -19,7 +18,6 @@ private:
 
   GLFWwindow *m_window;
   InputManager m_inputManager;
-  Renderer m_renderer;
 
   void startWindowLoop();
 };
