@@ -1,10 +1,6 @@
 #include <iostream>
 
 #include "window_manager.h"
-#include "program.h"
-#include "shader.h"
-#include "vertex_array_object.h"
-#include "vertex_buffer_object.h"
 
 void frame_buffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);

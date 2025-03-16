@@ -5,14 +5,13 @@
 #include "vertex_array_object.h"
 #include "vertex_buffer_object.h"
 
-#include <glad/glad.h>
+#include "open_gl_calls.h"
 
 Renderer::Renderer() {}
 
 Renderer::~Renderer() {}
 
 void Renderer::setup() {
-
   Program program;
   {
     Shader vertex("res/shaders/vertex.vert", SHADER_TYPE_VERTEX);
@@ -36,8 +35,8 @@ void Renderer::setup() {
   EBO ebo(indices, sizeof(indices));
   ebo.bind();
 
-  vao.enable(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+  glCall(vao.enable(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0));
   program.useProgram();
 }
 
-void Renderer::render() { glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); }
+void Renderer::render() { glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)); }

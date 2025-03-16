@@ -10,7 +10,9 @@ public:
   Shader(const std::string &filePath, int shaderType);
   ~Shader();
 
-  inline unsigned int getId() const { return id; }
+  inline unsigned int getId() const {
+    return id;
+  }
 
 private:
   std::string m_src;

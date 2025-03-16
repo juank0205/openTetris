@@ -8,6 +8,7 @@ add_library(${PROJECT_NAME}_lib STATIC
     vertex_array_object.cpp
     vertex_buffer_object.cpp
     element_buffer_object.cpp
+    open_gl_calls.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_lib PUBLIC 

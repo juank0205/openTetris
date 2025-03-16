@@ -1,7 +1,7 @@
-#include "program.h"
-
-#include <glad/glad.h>
 #include <iostream>
+
+#include "program.h"
+#include "open_gl_calls.h"
 
 Program::Program() {
   id = glCreateProgram();
@@ -10,11 +10,11 @@ Program::Program() {
 Program::~Program() {}
 
 void Program::attachShader(unsigned int shaderId) {
-  glAttachShader(id, shaderId);
+  glCall(glAttachShader(id, shaderId));
 }
 
 void Program::linkShaders() {
-  glLinkProgram(id);
+  glCall(glLinkProgram(id));
   getLinkInfo();
 } 
 
@@ -31,5 +31,5 @@ void Program::getLinkInfo() {
 }
 
 void Program::useProgram() {
-  glUseProgram(id);
+  glCall(glUseProgram(id));
 }

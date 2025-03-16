@@ -1,9 +1,10 @@
-#include "shader.h"
-
 #include <fstream>
 #include <glad/glad.h>
 #include <iostream>
 #include <iterator>
+
+#include "open_gl_calls.h"
+#include "shader.h"
 
 Shader::Shader(const std::string &filePath, int shaderType)
     : m_shaderType(shaderType) {
@@ -11,9 +12,7 @@ Shader::Shader(const std::string &filePath, int shaderType)
   compile();
 }
 
-Shader::~Shader() {
-  glDeleteShader(id);
-}
+Shader::~Shader() { glDeleteShader(id); }
 
 int Shader::readSource(const std::string &filePath) {
   std::ifstream stream(filePath);
@@ -30,16 +29,16 @@ int Shader::readSource(const std::string &filePath) {
 
 void Shader::compile() {
   if (m_shaderType == SHADER_TYPE_VERTEX) {
-    id = glCreateShader(GL_VERTEX_SHADER);
+    glCall(id = glCreateShader(GL_VERTEX_SHADER));
   } else {
-    id = glCreateShader(GL_FRAGMENT_SHADER);
+    glCall(id = glCreateShader(GL_FRAGMENT_SHADER));
   }
 
   const char *srcPtr = m_src.c_str();
 
-  glShaderSource(id, 1, &srcPtr, NULL);
-  glCompileShader(id);
-  checkCompileInfo(); 
+  glCall(glShaderSource(id, 1, &srcPtr, NULL));
+  glCall(glCompileShader(id));
+  checkCompileInfo();
 }
 
 void Shader::checkCompileInfo() {
