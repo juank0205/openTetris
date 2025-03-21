@@ -33,3 +33,7 @@ void Program::getLinkInfo() {
 void Program::useProgram() {
   glCall(glUseProgram(id));
 }
+
+void Program::set1Int(const char *name, int value) {
+  glCall(glUniform1i(glGetUniformLocation(id, name), value));
+}

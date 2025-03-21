@@ -41,8 +41,11 @@ void Renderer::setup() {
   EBO ebo(indices, sizeof(indices));
   ebo.bind();
   
-  Texture text("res/textures/container.jpg");
-  text.bind();
+  Texture text("res/textures/mortis.png", PNG);
+  Texture text2("res/textures/awesomeface.png", PNG);
+  text.activate(0);
+  text2.activate(1);
+
 
   glCall(vao.enable(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0));
   glCall(vao.enable(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
@@ -50,6 +53,8 @@ void Renderer::setup() {
   glCall(vao.enable(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                     6 * sizeof(float)));
   program.useProgram();
+  program.set1Int("texture1", 0);
+  program.set1Int("texture2", 1);
 }
 
 void Renderer::render() {

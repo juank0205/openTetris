@@ -12,6 +12,8 @@ public:
   inline unsigned int getId() const {
     return id;
   }
+
+  void set1Int(const char *name, int value);
 private:
   unsigned int id;
 
