@@ -18,10 +18,11 @@ add_library(${PROJECT_NAME}_lib STATIC
 #     ${CMAKE_SOURCE_DIR}/external/stb_image/include
 # )
 
-target_link_libraries(${PROJECT_NAME}_lib PUBLIC glfw3 glad stb_image)
+target_link_libraries(${PROJECT_NAME}_lib PUBLIC glfw glad stb_image)
 
 target_include_directories(${PROJECT_NAME}_lib PUBLIC
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/external/glfw/include
 )
 
 # if(UNIX)
