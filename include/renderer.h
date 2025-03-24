@@ -1,13 +1,11 @@
 #pragma once
 
-#include "program.h"
+#include "scene_manager.h"
 
 class Renderer {
 public:
   Renderer();
   ~Renderer();
 
-  void render();
-  void setup();
-  Program program;
+  void render(SceneManager &scene);
 };

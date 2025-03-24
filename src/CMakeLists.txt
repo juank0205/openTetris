@@ -9,6 +9,9 @@ add_library(${PROJECT_NAME}_lib STATIC
     vertex_buffer_object.cpp
     element_buffer_object.cpp
     texture.cpp
+    game_object.cpp
+    app.cpp
+    scene_manager.cpp
 )
 
 # target_include_directories(${PROJECT_NAME}_lib PRIVATE 

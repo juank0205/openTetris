@@ -1,6 +1,6 @@
-#include "window_manager.h"
+#include "app.h"
 
 int main(int argc, char *argv[]) {
-  WindowManager windowManager(800, 600, "Vamos hijueputa");
-  windowManager.createWindow();
+  App app;
+  app.run();
 }

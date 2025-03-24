@@ -8,6 +8,4 @@ public:
   ~InputManager();
 
   void processInput(GLFWwindow *window);
-private:
-
 };

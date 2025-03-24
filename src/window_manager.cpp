@@ -1,7 +1,6 @@
-#include <iostream>
-
 #include "window_manager.h"
-#include "renderer.h"
+
+#include <iostream>
 
 void frame_buffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
@@ -14,6 +13,8 @@ WindowManager::WindowManager(int width, int height, const char *name)
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+  createWindow();
 }
 
 WindowManager::~WindowManager() { glfwTerminate(); }
@@ -32,24 +33,22 @@ int WindowManager::createWindow() {
   }
 
   glfwSetFramebufferSizeCallback(m_window, frame_buffer_size_callback);
-  startWindowLoop();
+  m_isRunning = true;
   return 0;
 }
 
-void WindowManager::startWindowLoop() {
-  Renderer m_renderer;
-  m_renderer.setup();
+void WindowManager::clearColor() {
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
 
-  while (!glfwWindowShouldClose(m_window)) {
-    m_inputManager.processInput(m_window);
+void WindowManager::swapBuffers() {
 
+  glfwSwapBuffers(m_window);
+  glfwPollEvents();
+}
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    m_renderer.render();
-
-    glfwSwapBuffers(m_window);
-    glfwPollEvents();
-  }
+void WindowManager::checkWindowStatus() {
+  if (glfwWindowShouldClose(m_window))
+    m_isRunning = false;
 }
