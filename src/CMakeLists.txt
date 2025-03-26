@@ -26,6 +26,7 @@ target_link_libraries(${PROJECT_NAME}_lib PUBLIC glfw glad stb_image)
 target_include_directories(${PROJECT_NAME}_lib PUBLIC
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/external/glfw/include
+    ${CMAKE_SOURCE_DIR}/external/glm
 )
 
 # if(UNIX)

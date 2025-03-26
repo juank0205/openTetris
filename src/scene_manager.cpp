@@ -3,8 +3,6 @@
 #include "program.h"
 #include "shader.h"
 
-#include <iostream>
-
 SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
@@ -31,7 +29,6 @@ void SceneManager::setupScene() {
 
   unsigned int indices[] = {0, 1, 2, 0, 2, 3};
 
-  std::cout << "Pene de mono" << std::endl;
   m_gameObjects.emplace_back(vertices, sizeof(vertices), indices,
                              sizeof(indices), "res/textures/mortis.png", PNG,
                              program);

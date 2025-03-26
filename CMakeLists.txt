@@ -18,6 +18,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
   add_compile_definitions(DEBUG)
 endif()
 

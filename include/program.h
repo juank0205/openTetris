@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 class Program {
 public:
   Program();
@@ -14,6 +16,7 @@ public:
   }
 
   void set1Int(const char *name, int value);
+  void setMatrix4f(const char *name, glm::mat4 &matrix);
 private:
   unsigned int id;
 
