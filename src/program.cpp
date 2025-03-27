@@ -8,7 +8,9 @@ Program::Program() {
   id = glCreateProgram();
 }
 
-Program::~Program() {}
+Program::~Program() {
+  std::cout << "Chao" << std::endl;
+}
 
 void Program::attachShader(unsigned int shaderId) {
   glCall(glAttachShader(id, shaderId));

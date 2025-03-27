@@ -1,7 +1,8 @@
 #pragma once
 
-#include "element_buffer_object.h"
+//#include "element_buffer_object.h"
 #include "glm/ext/matrix_float4x4.hpp"
+#include "glm/ext/vector_float3.hpp"
 #include "program.h"
 #include "texture.h"
 #include "vertex_array_object.h"
@@ -15,12 +16,13 @@ public:
              size_t indicesSize, const char *filePath, int textureType, Program &program);
   ~GameObject();
 
-  void draw();
+  void draw(float deltaTime);
+  void translate(glm::vec3 &vector);
 
   VAO vao;
-  EBO ebo;
+  //EBO ebo;
   VBO vbo;
   Texture texture;
-  Program program;
+  Program &program;
   glm::mat4 transform;
 };
