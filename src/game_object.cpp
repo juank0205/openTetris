@@ -1,6 +1,5 @@
 #include "game_object.h"
 #include "open_gl_calls.h"
-#include "GLFW/glfw3.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/trigonometric.hpp"
 #include "program.h"

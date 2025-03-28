@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer.h"
 #include "window_manager.h"
+#include "renderer.h"
 #include "scene_manager.h"
 #include "input_manager.h"
 
@@ -14,7 +14,7 @@ public:
 
 private:
   WindowManager m_WindowManager;
+  InputManager m_inputManager;
   SceneManager m_sceneManager;
   Renderer m_renderer;
-  InputManager m_inputManager;
 };

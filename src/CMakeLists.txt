@@ -12,6 +12,7 @@ add_library(${PROJECT_NAME}_lib STATIC
     game_object.cpp
     app.cpp
     scene_manager.cpp
+    camera.cpp
 )
 
 # target_include_directories(${PROJECT_NAME}_lib PRIVATE 

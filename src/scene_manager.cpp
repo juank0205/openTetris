@@ -1,15 +1,14 @@
+#include "open_gl_calls.h"
 #include "scene_manager.h"
 #include "glm/ext/matrix_clip_space.hpp"
-#include "glm/ext/matrix_transform.hpp"
 #include "glm/trigonometric.hpp"
-#include "open_gl_calls.h"
 #include "program.h"
 #include "shader.h"
 
 #include <iostream>
 
-SceneManager::SceneManager()
-    : m_camera(glm::mat4(1.0f)), m_projection(glm::mat4(1.0f)) {}
+SceneManager::SceneManager(InputManager &inputManager)
+    : m_camera(inputManager), m_projection(glm::mat4(1.0f)) {}
 
 SceneManager::~SceneManager() {}
 
@@ -78,8 +77,8 @@ void SceneManager::setupScene() {
     createGameObject(vertices);
     m_gameObjects[m_gameObjects.size() - 1].translate(vector);
   }
-  
-    std::cout << m_gameObjects.size() << std::endl;
+
+  std::cout << m_gameObjects.size() << std::endl;
 
   m_program.useProgram();
   m_program.set1Int("texture1", 0);
@@ -89,11 +88,10 @@ void SceneManager::setupScene() {
   m_gameObjects[0].texture.activate(0);
   text2.activate(1);
 
-  m_camera = glm::translate(m_camera, glm::vec3(0.0f, 0.0f, -3.0f));
   m_projection =
       glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-  m_program.setMatrix4f("view", m_camera);
+  m_program.setMatrix4f("view", m_camera.getView());
   m_program.setMatrix4f("projection", m_projection);
 }
 
@@ -109,3 +107,5 @@ void SceneManager::createGameObject(float *vertices) {
   glCall(m_gameObjects[m_gameObjects.size() - 1].vao.enable(
       1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 3 * sizeof(float)));
 }
+
+void SceneManager::update() { m_camera.update(m_program); }
