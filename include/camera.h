@@ -19,9 +19,13 @@ private:
   glm::mat4 m_view;
   glm::vec3 m_cameraFront;
   glm::vec3 m_cameraUp;
-  float cameraSpeed = 2.0f;
+  float m_cameraSpeed = 2.0f;
+  float m_yaw = -90.0f;
+  float m_pitch = 0.0f;
 
   void setView();
+  void updateAngles(float offsetX, float offsetY);
+  void calculateDirection();
 
   void moveLeft();
   void moveRight();

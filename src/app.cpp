@@ -9,6 +9,7 @@ App::~App() {}
 void App::run() {
   m_sceneManager.setupScene();
   GLFWwindow *windowPointer = m_WindowManager.getWindowPointer();
+  m_inputManager.registerMouseCallback(windowPointer);
 
   while (m_WindowManager.getIsRunning()) {
     m_inputManager.processInput(windowPointer);
