@@ -1,7 +1,7 @@
 #include "vertex_buffer_object.h"
 #include "open_gl_calls.h"
 
-VBO::VBO(float *data, size_t size) {
+VBO::VBO(float *data, size_t size) : m_size(size) {
   glCall(glGenBuffers(1, &m_id));
   bind();
   glCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));

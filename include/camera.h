@@ -1,7 +1,8 @@
 #pragma once
 
 #include "input_manager.h"
-#include "program.h"
+#include "resource_manager.h"
+
 #include <glm/glm.hpp>
 
 class Camera {
@@ -9,7 +10,7 @@ public:
   Camera(InputManager &inputManager);
   ~Camera();
 
-  void update(Program &program);
+  void update(ResourceManager &resourceManager);
 
   inline glm::mat4& getView() { return m_view; }
 

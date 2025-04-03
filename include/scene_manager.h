@@ -4,6 +4,7 @@
 #include "game_object.h"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "input_manager.h"
+#include "resource_manager.h"
 
 #include <vector>
 
@@ -23,7 +24,7 @@ private:
   std::vector<GameObject> m_gameObjects;
   Camera m_camera;
   glm::mat4 m_projection;
-  Program m_program;
+  ResourceManager m_resourceManager;
 
-  void createGameObject(float *vertices);
+  void createGameObject(float *vertices, Program &program);
 };

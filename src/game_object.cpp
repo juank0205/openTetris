@@ -1,15 +1,14 @@
 #include "game_object.h"
-#include "open_gl_calls.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/trigonometric.hpp"
+#include "open_gl_calls.h"
 #include "program.h"
-
 
 GameObject::GameObject(float *vertices, size_t verticesSize,
                        unsigned int *indices, size_t indicesSize,
-                       const char *filePath, int textureType, Program &program)
+                       Program &program)
     : vbo(vertices, verticesSize),
-      /*ebo(indices, indicesSize),*/ texture(filePath, textureType),
+      /*ebo(indices, indicesSize), texture(filePath, textureType), */
       program(program), transform(glm::mat4(1.0f)) {}
 
 GameObject::~GameObject() {}

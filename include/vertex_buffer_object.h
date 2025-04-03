@@ -11,7 +11,7 @@ public:
 
   void bind();
 private:
-  int size;
+  int m_size;
   unsigned int m_id;
 
   void unbind();

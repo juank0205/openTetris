@@ -13,6 +13,7 @@ add_library(${PROJECT_NAME}_lib STATIC
     app.cpp
     scene_manager.cpp
     camera.cpp
+    resource_manager.cpp
 )
 
 # target_include_directories(${PROJECT_NAME}_lib PRIVATE 

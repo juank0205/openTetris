@@ -4,6 +4,7 @@
 #include "glm/ext/vector_float3.hpp"
 #include "glm/geometric.hpp"
 #include "glm/trigonometric.hpp"
+#include "resource_manager.h"
 #include <iostream>
 
 static float lastFrame = glfwGetTime();
@@ -25,8 +26,11 @@ Camera::Camera(InputManager &inputManager)
 
 Camera::~Camera() {}
 
-void Camera::update(Program &program) {
-  program.setMatrix4f("view", m_view);
+void Camera::update(ResourceManager &resourceManager) {
+  for (auto &[name, program] : resourceManager.getPrograms()) {
+    program.useProgram();
+    program.setMatrix4f("view", m_view);
+  }
   lastFrame = glfwGetTime();
 }
 
