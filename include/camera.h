@@ -10,7 +10,7 @@ public:
   Camera(InputManager &inputManager);
   ~Camera();
 
-  void update(ResourceManager &resourceManager);
+  void update(ResourceManager &resourceManager, float deltaTime);
 
   inline glm::mat4& getView() { return m_view; }
 
@@ -20,6 +20,7 @@ private:
   glm::mat4 m_view;
   glm::vec3 m_cameraFront;
   glm::vec3 m_cameraUp;
+  float m_deltaTime;
   float m_cameraSpeed = 2.0f;
   float m_yaw = -90.0f;
   float m_pitch = 0.0f;

@@ -14,7 +14,7 @@ void ResourceManager::createProgram(const char *vertexFile,
   Shader vertexShader(vertexFile, SHADER_TYPE_VERTEX);
   Shader fragmentShader(fragmentFile, SHADER_TYPE_FRAGMENT);
 
-  Program &program = m_programs[name]; 
+  Program &program = m_programs[name];
 
   program.attachShader(vertexShader.getId());
   program.attachShader(fragmentShader.getId());
@@ -23,49 +23,50 @@ void ResourceManager::createProgram(const char *vertexFile,
 
 void ResourceManager::loadShaders() {
   createProgram("res/shaders/vertex.vert", "res/shaders/fragment.frag", "cubo");
-  createProgram("res/shaders/vertex.vert", "res/shaders/lightingFragment.frag", "lighting");
+  createProgram("res/shaders/vertex.vert", "res/shaders/lightingFragment.frag",
+                "lighting");
 }
 
 void ResourceManager::loadVertices() {
-  m_vertices["cubo"] = {-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, //
-                        0.5f,  -0.5f, -0.5f, 1.0f, 0.0f, //
-                        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, //
-                        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, //
-                        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, //
-                        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, //
+  m_vertices["cubo"] = {-0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, //
+                      0.5f,  -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, //
+                      0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, //
+                      0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, //
+                      -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, //
+                      -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, //
 
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, //
-                        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, //
-                        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, //
-                        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, //
-                        -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, //
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, //
+                      -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f, //
+                      0.5f,  -0.5f, 0.5f,  0.0f,  0.0f,  1.0f, //
+                      0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, //
+                      0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, //
+                      -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f, //
+                      -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f, //
 
-                        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, //
-                        -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f, //
-                        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
-                        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, //
-                        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, //
+                      -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f, //
+                      -0.5f, 0.5f,  -0.5f, -1.0f, 0.0f,  0.0f, //
+                      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f, //
+                      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f, //
+                      -0.5f, -0.5f, 0.5f,  -1.0f, 0.0f,  0.0f, //
+                      -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f, //
 
-                        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //
-                        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, //
-                        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, //
-                        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, //
-                        0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, //
-                        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //
+                      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, //
+                      0.5f,  0.5f,  -0.5f, 1.0f,  0.0f,  0.0f, //
+                      0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f, //
+                      0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f, //
+                      0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f, //
+                      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, //
 
-                        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
-                        0.5f,  -0.5f, -0.5f, 1.0f, 1.0f, //
-                        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, //
-                        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, //
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, //
-                        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, //
+                      -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f, //
+                      0.5f,  -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f, //
+                      0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f, //
+                      0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f, //
+                      -0.5f, -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f, //
+                      -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f, //
 
-                        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, //
-                        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, //
-                        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //
-                        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //
-                        -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, //
-                        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
+                      -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f, //
+                      0.5f,  0.5f,  -0.5f, 0.0f,  1.0f,  0.0f, //
+                      0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, //
+                      0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, //
+                      -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f, //
+                      -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f};
 }

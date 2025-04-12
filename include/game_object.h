@@ -1,6 +1,5 @@
 #pragma once
 //#include "element_buffer_object.h"
-#include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/vector_float3.hpp"
 #include "program.h"
 #include "vertex_array_object.h"
@@ -14,13 +13,16 @@ public:
              size_t indicesSize, Program &program);
   ~GameObject();
 
-  void draw(float deltaTime);
+  void draw();
   void translate(glm::vec3 &vector);
+  void rotate(glm::vec3 &eulerAngles);
+  void update(float deltaTime);
 
   VAO vao;
   //EBO ebo;
   VBO vbo;
   //Texture texture;
   Program &program;
-  glm::mat4 transform;
+  glm::vec3 m_position;
+  glm::vec3 m_rotation;
 };

@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <fstream>
 #include <glad/glad.h>
 #include <iostream>
@@ -7,7 +8,7 @@
 #include "shader.h"
 
 Shader::Shader(const std::string &filePath, int shaderType)
-    : m_shaderType(shaderType) {
+    : m_shaderType(shaderType), m_filePath(filePath.c_str()) {
   readSource(filePath);
   compile();
 }
@@ -48,6 +49,7 @@ void Shader::checkCompileInfo() {
 
   if (!success) {
     glGetShaderInfoLog(id, 512, NULL, log);
-    std::cout << "ERROR::SHADER_COMPILATION: " << log << std::endl;
+    std::cout << "(" << m_filePath << ") ERROR::SHADER_COMPILATION: " << log << std::endl;
+    exit(1);
   }
 }

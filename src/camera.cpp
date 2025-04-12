@@ -5,9 +5,6 @@
 #include "glm/geometric.hpp"
 #include "glm/trigonometric.hpp"
 #include "resource_manager.h"
-#include <iostream>
-
-static float lastFrame = glfwGetTime();
 
 Camera::Camera(InputManager &inputManager)
     : m_position(glm::vec3(0.0f, 0.0f, 3.0f)),
@@ -26,12 +23,13 @@ Camera::Camera(InputManager &inputManager)
 
 Camera::~Camera() {}
 
-void Camera::update(ResourceManager &resourceManager) {
+void Camera::update(ResourceManager &resourceManager, float deltaTime) {
   for (auto &[name, program] : resourceManager.getPrograms()) {
     program.useProgram();
     program.setMatrix4f("view", m_view);
   }
-  lastFrame = glfwGetTime();
+  resourceManager.getProgram("cubo").setVec3f("viewPos", m_position);
+  m_deltaTime = deltaTime;
 }
 
 void Camera::setView() {
@@ -48,8 +46,6 @@ void Camera::updateAngles(float offsetX, float offsetY) {
   if (m_pitch <= -89.0f)
     m_pitch = -89.0f;
 
-  std::cout << "YAW: " << m_yaw << " PITCH: " << m_pitch << std::endl;
-
   calculateDirection();
   setView();
 }
@@ -64,34 +60,23 @@ void Camera::calculateDirection() {
 
 void Camera::moveLeft() {
   float newFrame = glfwGetTime();
-  float deltaTime = newFrame - lastFrame;
   m_position -= glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) *
-                m_cameraSpeed * deltaTime;
+                m_cameraSpeed * m_deltaTime;
   setView();
-  lastFrame = newFrame;
 }
 
 void Camera::moveRight() {
-  float newFrame = glfwGetTime();
-  float deltaTime = newFrame - lastFrame;
   m_position += glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) *
-                m_cameraSpeed * deltaTime;
+                m_cameraSpeed * m_deltaTime;
   setView();
-  lastFrame = newFrame;
 }
 
 void Camera::moveForward() {
-  float newFrame = glfwGetTime();
-  float deltaTime = newFrame - lastFrame;
-  m_position += m_cameraFront * m_cameraSpeed * deltaTime;
+  m_position += m_cameraFront * m_cameraSpeed * m_deltaTime;
   setView();
-  lastFrame = newFrame;
 }
 
 void Camera::moveBackwards() {
-  float newFrame = glfwGetTime();
-  float deltaTime = newFrame - lastFrame;
-  m_position -= m_cameraFront * m_cameraSpeed * deltaTime;
+  m_position -= m_cameraFront * m_cameraSpeed * m_deltaTime;
   setView();
-  lastFrame = newFrame;
 }

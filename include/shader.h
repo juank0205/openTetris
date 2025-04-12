@@ -18,6 +18,7 @@ private:
   std::string m_src;
   unsigned int id;
   int m_shaderType;
+  const char * m_filePath;
 
   int readSource(const std::string &filePath);
   void compile();
