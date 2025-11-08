@@ -1,5 +1,5 @@
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_core)
 
 set(RES_DIR "${CMAKE_SOURCE_DIR}/res")
 set(DEST_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res")

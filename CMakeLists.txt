@@ -4,11 +4,14 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(FETCHCONTENT_QUIET OFF)
+cmake_policy(SET CMP0135 NEW)
 set(OSBITS 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set(OSBITS 64)
 endif()
-set(FULL_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}${OSBITS}/${CMAKE_BUILD_TYPE}")
+set(FULL_OUTPUT_DIR
+    "${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}${OSBITS}/${CMAKE_BUILD_TYPE}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${FULL_OUTPUT_DIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${FULL_OUTPUT_DIR}/libs")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${FULL_OUTPUT_DIR}")
@@ -28,11 +31,32 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-set( GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only" )
-set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
+include(FetchContent)
+FetchContent_Declare(
+	glfw
+	GIT_REPOSITORY https://github.com/glfw/glfw
+	GIT_TAG 3.4
+)
+FetchContent_MakeAvailable(glfw)
 
+FetchContent_Declare(
+	glm
+	GIT_REPOSITORY https://github.com/g-truc/glm
+	GIT_TAG 1.0.2 
+)
+FetchContent_MakeAvailable(glm)
+
+FetchContent_Declare(
+	stb_image
+	GIT_REPOSITORY https://github.com/nothings/stb
+	GIT_TAG master
+)
+add_library(stb_image INTERFACE)
+target_include_directories(stb_image INTERFACE ${stb_image_SOURCE_DIR})
+
+# GLAD
 add_subdirectory(external/glad)
-add_subdirectory(external/glfw)
-add_subdirectory(external/stb_image)
-add_subdirectory(src)
+
+# add_subdirectory(src)
+add_subdirectory(src/core)
 add_subdirectory(main)
