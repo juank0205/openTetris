@@ -1,26 +1,22 @@
 #include "window_manager.h"
-
 #include <iostream>
 
 void frame_buffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-WindowManager::WindowManager(int width, int height, const char *name)
-    : m_width(width), m_height(height), m_name(name), m_window(NULL) {
+WindowManager::WindowManager() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-  createWindow();
 }
 
-WindowManager::~WindowManager() { glfwTerminate(); }
+void WindowManager::Clean() { glfwTerminate(); }
 
-int WindowManager::createWindow() {
-  m_window = glfwCreateWindow(m_width, m_height, m_name, NULL, NULL);
+int WindowManager::CreateWindow(int width, int height, const char *name) {
+  m_window = glfwCreateWindow(width, height, name, NULL, NULL);
   if (m_window == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -40,18 +36,21 @@ int WindowManager::createWindow() {
   return 0;
 }
 
-void WindowManager::clearColor() {
+void WindowManager::ClearColor() {
   glClearColor(0.0f, 0.3f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void WindowManager::swapBuffers() {
-
-  glfwSwapBuffers(m_window);
+void WindowManager::PollEvents() {
   glfwPollEvents();
 }
 
-void WindowManager::checkWindowStatus() {
+void WindowManager::SwapBuffers() {
+
+  glfwSwapBuffers(m_window);
+}
+
+void WindowManager::CheckWindowStatus() {
   if (glfwWindowShouldClose(m_window))
     m_isRunning = false;
 }
