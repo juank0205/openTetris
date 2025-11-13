@@ -1,5 +1,5 @@
 #include "shape.h"
-#include "game_constants.h"
+#include "board.h"
 #include "texture.h"
 
 Shape::Shape(ShapeType type, int initialX, int initialY) {
@@ -52,8 +52,10 @@ std::vector<TilePosition> Shape::GetTilePositions() {
   return tilesPos;
 }
 
-void Shape::Rotate(unsigned int direction) {
-  for (auto &offset : Tiles) {
+void Shape::Rotate(unsigned int direction, MoveValidator validator) {
+  std::vector<ShapeOffset> newOffsets = Tiles;
+
+  for (auto &offset : newOffsets) {
     int oldX = offset.x;
     int oldY = offset.y;
     if (direction == SHAPE_DIRECTION_RIGHT) {
@@ -64,28 +66,59 @@ void Shape::Rotate(unsigned int direction) {
       offset.y = oldX;
     }
   }
+
+  // Predict new positions
+  std::vector<TilePosition> newPositions;
+  newPositions.reserve(newOffsets.size());
+  for (auto &offset : newOffsets) {
+    newPositions.push_back({BasePosition.x + offset.x,
+                            BasePosition.y + offset.y, BasePosition.color});
+  }
+
+  if (!validator(newPositions))
+    return;
+
+  Tiles = newOffsets;
 }
 
-void Shape::Update() { BasePosition.y -= 1; }
-
-void Shape::Move(unsigned int direction) {
-  if (direction == SHAPE_DIRECTION_RIGHT) {
-    BasePosition.x++;
-    for (auto &offset : Tiles) {
-      if (BasePosition.x + offset.x == GRID_WIDTH) {
-        BasePosition.x--;
-        break;
-      }
-    }
-  } else {
-    BasePosition.x--;
-    for (auto &offset : Tiles) {
-      if (BasePosition.x + offset.x < 0) {
-        BasePosition.x++;
-        break;
-      }
-    }
+void Shape::Update(MoveValidator validator) {
+  TilePosition newBase = BasePosition;
+  newBase.y--;
+  std::vector<TilePosition> newPositions;
+  newPositions.reserve(Tiles.size());
+  for (auto &offset : Tiles) {
+    newPositions.push_back(
+        {newBase.x + offset.x, newBase.y + offset.y, BasePosition.color});
   }
+
+  // Validate move
+  if (!validator(newPositions))
+    return;
+  // Commit move
+  BasePosition = newBase;
+}
+
+void Shape::Move(unsigned int direction, MoveValidator validator) {
+  TilePosition newBase = BasePosition;
+
+  if (direction == SHAPE_DIRECTION_RIGHT)
+    newBase.x++;
+  else if (direction == SHAPE_DIRECTION_LEFT)
+    newBase.x--;
+
+  // Predict new positions
+  std::vector<TilePosition> newPositions;
+  newPositions.reserve(Tiles.size());
+  for (auto &offset : Tiles) {
+    newPositions.push_back(
+        {newBase.x + offset.x, newBase.y + offset.y, BasePosition.color});
+  }
+
+  // Validate move
+  if (!validator(newPositions))
+    return;
+  // Commit move
+  BasePosition = newBase;
 }
 
 void Shape::Draw(SpriteRenderer &renderer, Texture &texture) {

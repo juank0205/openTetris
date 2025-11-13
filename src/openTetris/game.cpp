@@ -10,7 +10,6 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
-#include <iostream>
 #include <random>
 #include <vector>
 
@@ -100,7 +99,11 @@ void Game::update(float deltaTime) {
   if (fallTimer < fallInterval)
     return;
 
-  currentShape.Update();
+  auto validator = [&](const std::vector<TilePosition> &positions) {
+    return !board.CheckCollision(positions); // you implement this
+  };
+
+  currentShape.Update(validator);
   fallTimer = 0.0f;
 
   auto shapeTiles = currentShape.GetTilePositions();
@@ -119,21 +122,25 @@ void Game::processInput(float deltaTime) {
   moveTimer += deltaTime;
   rotateTimer += deltaTime;
 
+  auto validator = [&](const std::vector<TilePosition> &positions) {
+    return !board.CheckCollision(positions); // you implement this
+  };
+
   if (window_manager.Keys[GLFW_KEY_RIGHT] && moveTimer >= moveCooldown) {
-    currentShape.Move(SHAPE_DIRECTION_RIGHT);
+    currentShape.Move(SHAPE_DIRECTION_RIGHT, validator);
     moveTimer = 0.0f;
   }
   if (window_manager.Keys[GLFW_KEY_LEFT] && moveTimer >= moveCooldown) {
-    currentShape.Move(SHAPE_DIRECTION_LEFT);
+    currentShape.Move(SHAPE_DIRECTION_LEFT, validator);
     moveTimer = 0.0f;
   }
 
   if (window_manager.Keys[GLFW_KEY_X] && rotateTimer >= rotateCooldown) {
-    currentShape.Rotate(SHAPE_DIRECTION_RIGHT);
+    currentShape.Rotate(SHAPE_DIRECTION_RIGHT, validator);
     rotateTimer = 0.0f;
   }
   if (window_manager.Keys[GLFW_KEY_Z] && rotateTimer >= rotateCooldown) {
-    currentShape.Rotate(SHAPE_DIRECTION_LEFT);
+    currentShape.Rotate(SHAPE_DIRECTION_LEFT, validator);
     rotateTimer = 0.0f;
   }
 }
@@ -146,7 +153,7 @@ void Game::generateNewShape() {
   ShapeType type = static_cast<ShapeType>(shapeIndex);
 
   int initialX = GRID_WIDTH / 2;
-  int initialY = GRID_HEIGHT - 1; // top row (y increasing upwards)
+  int initialY = GRID_HEIGHT - 2; // top row (y increasing upwards)
 
   // Construct the new shape and set currentShape
   currentShape = Shape(type, initialX, initialY);
