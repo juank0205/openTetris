@@ -29,26 +29,19 @@ int WindowManager::CreateWindow(int width, int height, const char *name) {
   }
 
   glfwSetFramebufferSizeCallback(m_window, frame_buffer_size_callback);
-  glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   m_isRunning = true;
 
-  glEnable(GL_DEPTH_TEST);
   return 0;
 }
 
 void WindowManager::ClearColor() {
-  glClearColor(0.0f, 0.3f, 0.1f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void WindowManager::PollEvents() {
-  glfwPollEvents();
-}
+void WindowManager::PollEvents() { glfwPollEvents(); }
 
-void WindowManager::SwapBuffers() {
-
-  glfwSwapBuffers(m_window);
-}
+void WindowManager::SwapBuffers() { glfwSwapBuffers(m_window); }
 
 void WindowManager::CheckWindowStatus() {
   if (glfwWindowShouldClose(m_window))

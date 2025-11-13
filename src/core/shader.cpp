@@ -21,6 +21,10 @@ ShaderProgram &ShaderProgram::Use() {
   return *this;
 }
 
+void ShaderProgram::Unbind() {
+  glUseProgram(0);
+}
+
 void ShaderProgram::Compile(const char *vertexSource,
                             const char *fragmentSource,
                             const char *geometrySource) {

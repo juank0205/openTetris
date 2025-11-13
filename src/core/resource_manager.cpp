@@ -85,8 +85,11 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
     texture.ImageFormat = GL_RGBA;
   }
 
+  stbi_set_flip_vertically_on_load(true);
   int width, height, nrChannels;
-  unsigned char *data = stbi_load(file, &width, &height, &nrChannels, 0);
+  unsigned char *data =
+      stbi_load(file, &width, &height, &nrChannels, alpha ? 4 : 3);
+
   texture.Generate(width, height, data);
   stbi_image_free(data);
   return texture;
