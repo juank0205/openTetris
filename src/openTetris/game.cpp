@@ -1,17 +1,18 @@
 #include "game.h"
+#include "board.h"
+#include "game_constants.h"
 #include "resource_manager.h"
 #include "shader.h"
+#include "shape.h"
 #include "sprite_renderer.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
-
-#define BOARD_WIDTH_PIXELS 250.0
-#define BOARD_HEIGHT_PIXELS 450.0
-#define GRID_HEIGHT 20
-#define GRID_WIDTH 10
+#include <iostream>
+#include <random>
+#include <vector>
 
 Game::Game(float width, float height, const char *window_name)
     : width(width), height(height), window_name(window_name) {}
@@ -30,6 +31,7 @@ void Game::Setup() {
                                              //
   this->sprite_renderer.SetShader(spriteShader);
   loadTextures();
+  generateNewShape();
 }
 
 void Game::Run() {
@@ -45,8 +47,8 @@ void Game::Run() {
 
     this->window_manager.PollEvents();
 
-    processInput();
-    update();
+    processInput(deltaTime);
+    update(deltaTime);
 
     this->window_manager.ClearColor();
 
@@ -76,6 +78,7 @@ void Game::setupWorldCoordinates(float windowWidth, float windowHeight,
 
 void Game::loadTextures() {
   this->resource_manager.LoadTexture("res/textures/mortis.png", true, "mortis");
+  this->resource_manager.LoadTexture("res/textures/tile.png", true, "tile");
   this->resource_manager.LoadTexture("res/textures/background.jpg", true,
                                      "background");
 }
@@ -88,18 +91,66 @@ void Game::drawBackground() {
 
 void Game::render() {
   drawBackground();
-  sprite_renderer.DrawSprite(resource_manager.GetTexture("mortis"),
-                             glm::vec2(0.0f, 0.0f), glm::vec2(1.0f), 0);
-  sprite_renderer.DrawSprite(resource_manager.GetTexture("mortis"),
-                             glm::vec2(0.0f, 1.0f), glm::vec2(1.0f), 0);
-  sprite_renderer.DrawSprite(resource_manager.GetTexture("mortis"),
-                             glm::vec2(1.0f, 1.0f), glm::vec2(1.0f), 0);
-  sprite_renderer.DrawSprite(resource_manager.GetTexture("mortis"),
-                             glm::vec2(1.0f, 2.0f), glm::vec2(1.0f), 0);
+  board.Draw(sprite_renderer, resource_manager.GetTexture("tile"));
+  currentShape.Draw(sprite_renderer, resource_manager.GetTexture("tile"));
 }
 
-void Game::update() {}
-void Game::processInput() {}
+void Game::update(float deltaTime) {
+  fallTimer += deltaTime;
+  if (fallTimer < fallInterval)
+    return;
+
+  currentShape.Update();
+  fallTimer = 0.0f;
+
+  auto shapeTiles = currentShape.GetTilePositions();
+  if (board.CheckShapeMovement(shapeTiles)) {
+    auto modifiedRows = board.PlaceShape(shapeTiles);
+    int filledRow = board.CheckRows(modifiedRows);
+    while (filledRow != BOARD_NO_ROW_CLEARED) {
+      modifiedRows = board.UpdateBoard(filledRow);
+      filledRow = board.CheckRows(modifiedRows);
+    }
+    generateNewShape();
+  }
+}
+
+void Game::processInput(float deltaTime) {
+  moveTimer += deltaTime;
+  rotateTimer += deltaTime;
+
+  if (window_manager.Keys[GLFW_KEY_RIGHT] && moveTimer >= moveCooldown) {
+    currentShape.Move(SHAPE_DIRECTION_RIGHT);
+    moveTimer = 0.0f;
+  }
+  if (window_manager.Keys[GLFW_KEY_LEFT] && moveTimer >= moveCooldown) {
+    currentShape.Move(SHAPE_DIRECTION_LEFT);
+    moveTimer = 0.0f;
+  }
+
+  if (window_manager.Keys[GLFW_KEY_X] && rotateTimer >= rotateCooldown) {
+    currentShape.Rotate(SHAPE_DIRECTION_RIGHT);
+    rotateTimer = 0.0f;
+  }
+  if (window_manager.Keys[GLFW_KEY_Z] && rotateTimer >= rotateCooldown) {
+    currentShape.Rotate(SHAPE_DIRECTION_LEFT);
+    rotateTimer = 0.0f;
+  }
+}
+
+static std::random_device rd;
+static std::mt19937 gen(rd());
+static std::uniform_int_distribution<int> distr(0, 6);
+void Game::generateNewShape() {
+  int shapeIndex = distr(gen);
+  ShapeType type = static_cast<ShapeType>(shapeIndex);
+
+  int initialX = GRID_WIDTH / 2;
+  int initialY = GRID_HEIGHT - 1; // top row (y increasing upwards)
+
+  // Construct the new shape and set currentShape
+  currentShape = Shape(type, initialX, initialY);
+}
 
 void Game::clean() {
   this->resource_manager.Clear();

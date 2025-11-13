@@ -5,6 +5,24 @@ void frame_buffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
+void key_callback(GLFWwindow *window, int key, int scancode, int action,
+                  int mode) {
+  auto *wm = static_cast<WindowManager *>(glfwGetWindowUserPointer(window));
+  if (!wm)
+    return;
+
+  // when a user presses the escape key, we set the WindowShouldClose property
+  // to true, closing the application
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
+  if (key >= 0 && key < 1024) {
+    if (action == GLFW_PRESS)
+      wm->Keys[key] = true;
+    else if (action == GLFW_RELEASE)
+      wm->Keys[key] = false;
+  }
+}
+
 WindowManager::WindowManager() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -28,6 +46,8 @@ int WindowManager::CreateWindow(int width, int height, const char *name) {
     std::cout << "Failed to initialize GLAD" << std::endl;
   }
 
+  glfwSetWindowUserPointer(m_window, this);
+  glfwSetKeyCallback(m_window, key_callback);
   glfwSetFramebufferSizeCallback(m_window, frame_buffer_size_callback);
   m_isRunning = true;
 
