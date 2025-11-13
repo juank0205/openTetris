@@ -20,5 +20,4 @@ add_custom_target(copy_textures ALL
     COMMENT "Updating changed textures"
 )
 
-
 add_dependencies(${PROJECT_NAME} copy_shaders copy_textures)

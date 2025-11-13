@@ -1,0 +1,7 @@
+#pragma once
+
+#define BOARD_WIDTH_PIXELS 250.0
+#define BOARD_HEIGHT_PIXELS 450.0
+#define GRID_HEIGHT 20
+#define GRID_WIDTH 10
+

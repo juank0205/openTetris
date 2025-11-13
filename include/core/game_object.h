@@ -3,6 +3,7 @@
 #include "glm/ext/vector_float3.hpp"
 #include "sprite_renderer.h"
 #include "texture.h"
+
 #include <glm/glm.hpp>
 
 class GameObject {

@@ -8,6 +8,7 @@ public:
   unsigned int ID;
   ShaderProgram() {}
   ShaderProgram &Use();
+  void Unbind();
   void Compile(const char *vertexSource, const char *fragmentSource,
                const char *geometrySource = nullptr);
   // Set uniform methods

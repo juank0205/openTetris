@@ -17,6 +17,7 @@ public:
   inline GLFWwindow *GetWindowPointer() { return m_window; }
   inline const bool GetIsRunning() const { return m_isRunning; }
 
+  bool Keys[1024] = {false};
 private:
   bool m_isRunning;
 
