@@ -30,4 +30,5 @@ public:
   std::vector<int> UpdateBoard(int clearedRow = BOARD_NO_ROW_CLEARED);
 
   void Draw(SpriteRenderer &renderer, Texture &texture);
+  bool CheckCollision(const std::vector<TilePosition> &tiles) const;
 };

@@ -36,7 +36,7 @@ private:
   float height;
   const char *window_name;
   float fallTimer = 0.0f;
-  float fallInterval = 0.1f; // seconds per automatic fall
+  float fallInterval = 0.15f; // seconds per automatic fall
 
   float moveTimer = 0.0f;
   float moveCooldown = 0.1f;

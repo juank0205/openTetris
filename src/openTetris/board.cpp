@@ -82,3 +82,12 @@ void Board::Draw(SpriteRenderer &renderer, Texture &texture) {
     }
   }
 }
+
+bool Board::CheckCollision(const std::vector<TilePosition> &tiles) const {
+    for (auto &tile : tiles) {
+        if (tile.x < 0 || tile.x >= GRID_WIDTH) return true;
+        if (tile.y < 0 || tile.y >= GRID_HEIGHT) return true;
+        if (BoardStatus[tile.y][tile.x].active) return true;
+    }
+    return false;
+}
