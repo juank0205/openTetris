@@ -62,6 +62,8 @@ These provide `<GL/gl.h>` and Mesa’s OpenGL implementation.
 
 ## 🔨 Building the project
 
+Run the following command from the root of the project:
+
 ```bash
 cmake --preset=linux-debug
 cd build/linux-debug
