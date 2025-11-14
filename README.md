@@ -11,7 +11,15 @@ A preset is defined in the CMakePresets.json file for debug and release modes on
 
 Even though most dependencies are fetched automatically by CMake (GLFW, GLAD, etc.), some system libraries must be installed manually because they come from your Linux distribution.
 
-#### Required packages
+Full Ubuntu install example
+```
+sudo apt install cmake ninja-build g++ pkg-config \
+  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+  libgl1-mesa-dev mesa-common-dev \
+  libwayland-dev libxkbcommon-dev wayland-protocols \
+```
+
+#### Required packages explanation
 
 - `cmake`
 - `ninja`
@@ -46,14 +54,6 @@ These provide <GL/gl.h> and Mesa’s GL implementation:
 - Ubuntu/Debian: `mesa-common-dev`
 - Arch: included in `mesa`
 - Fedora: `mesa-libGL-devel`
-
-Full Ubuntu install example
-```
-sudo apt install cmake ninja-build g++ pkg-config \
-  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
-  libgl1-mesa-dev mesa-common-dev \
-  libwayland-dev libxkbcommon-dev wayland-protocols \
-```
 
 #### Building
 ```
