@@ -111,9 +111,3 @@ Use:
 
 Visual Studio will automatically detect the available presets (Debug/Release, x86/x64).  
 You can then build and run directly from the IDE.
-
----
-
-# ✔ Done!
-
-```
