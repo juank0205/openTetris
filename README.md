@@ -17,7 +17,7 @@ Running the project in WSL is possible as long as `wslg` is supported by your Wi
 Most dependencies (GLFW, GLAD, etc.) are fetched by CMake automatically.  
 However, **some low-level system libraries must be installed manually** because they come from your distro.
 
-## 🧪 Full Ubuntu packages install
+### 🧪 Full Ubuntu packages install
 
 ```bash
 sudo apt install cmake ninja-build g++ pkg-config \
@@ -26,7 +26,7 @@ sudo apt install cmake ninja-build g++ pkg-config \
   libwayland-dev libxkbcommon-dev wayland-protocols
 ```
 
-## 📦 Required System Packages explanation
+### 📦 Required System Packages explanation
 
 The previous command installed the following packages:
 
@@ -38,7 +38,7 @@ The previous command installed the following packages:
 
 ---
 
-## 🖼️ Window system development libraries
+### 🖼️ Window system development libraries
 
 GLFW requires either **X11** or **Wayland** headers to be installed.
 
@@ -61,17 +61,13 @@ libxkbcommon-dev
 wayland-protocols
 ```
 
----
-
-## 🧩 OpenGL development headers
+### 🧩 OpenGL development headers
 
 These provide `<GL/gl.h>` and Mesa’s OpenGL implementation.
 
 - Ubuntu/Debian → `mesa-common-dev`
 - Arch → included in `mesa`
 - Fedora → `mesa-libGL-devel`
-
----
 
 ## 🔨 Building the project
 
@@ -82,8 +78,6 @@ ninja
 ```
 
 If anything is missing, **CMake will tell you** during configuration.
-
----
 
 ## ▶️ Running
 
