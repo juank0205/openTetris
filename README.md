@@ -8,6 +8,7 @@ A (pretty mediocre, but fun) implementation of **Tetris** in **C++** using **Ope
 
 This project uses **CMake**, so it must be installed on all platforms.  
 All build presets are defined in **CMakePresets.json** for both Debug and Release on Windows & Linux.
+Running the project in WSL is possible as long as `wslg` is supported by your Windows version (requires Windows 11 or messing around with the wsl version in Windows 10).
 
 ---
 
@@ -16,9 +17,18 @@ All build presets are defined in **CMakePresets.json** for both Debug and Releas
 Most dependencies (GLFW, GLAD, etc.) are fetched by CMake automatically.  
 However, **some low-level system libraries must be installed manually** because they come from your distro.
 
----
+## 🧪 Full Ubuntu packages install
 
-## 📦 Required System Packages
+```bash
+sudo apt install cmake ninja-build g++ pkg-config \
+  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+  libgl1-mesa-dev mesa-common-dev \
+  libwayland-dev libxkbcommon-dev wayland-protocols
+```
+
+## 📦 Required System Packages explanation
+
+The previous command installed the following packages:
 
 ### Build tools
 - `cmake`
@@ -43,7 +53,7 @@ libgl1-mesa-dev
 ```
 
 ### 🌊 Wayland (optional)
-If your system uses Wayland:
+If your system uses Wayland, which new Ubuntu versions do (including wsl):
 
 ```
 libwayland-dev
@@ -60,17 +70,6 @@ These provide `<GL/gl.h>` and Mesa’s OpenGL implementation.
 - Ubuntu/Debian → `mesa-common-dev`
 - Arch → included in `mesa`
 - Fedora → `mesa-libGL-devel`
-
----
-
-## 🧪 Full Ubuntu example install
-
-```bash
-sudo apt install cmake ninja-build g++ pkg-config \
-  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
-  libgl1-mesa-dev mesa-common-dev \
-  libwayland-dev libxkbcommon-dev wayland-protocols
-```
 
 ---
 
