@@ -83,7 +83,7 @@ Executable path:
 Run it:
 
 ```bash
-cd bin/Linux/Debug
+cd bin/Linux64/Debug
 ./OpenTetris
 ```
 
