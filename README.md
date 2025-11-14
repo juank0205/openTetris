@@ -36,8 +36,6 @@ The previous command installed the following packages:
 - `g++`
 - `pkg-config`
 
----
-
 ### 🖼️ Window system development libraries
 
 GLFW requires either **X11** or **Wayland** headers to be installed.
