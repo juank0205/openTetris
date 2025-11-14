@@ -1,85 +1,128 @@
 # OpenTetris
 
-This is a pretty mediocre implementation of Tetris in OpenGL for both Windows and Linux in C++.
+A (pretty mediocre, but fun) implementation of **Tetris** in **C++** using **OpenGL**, built for **Windows** and **Linux**.
 
-## How to build
+---
 
-The build system used is CMake, therefore it must be available no matter the OS to build on.
-A preset is defined in the CMakePresets.json file for debug and release modes on Windows and Linux.
+# 🛠️ Build Instructions
 
-### Linux
+This project uses **CMake**, so it must be installed on all platforms.  
+All build presets are defined in **CMakePresets.json** for both Debug and Release on Windows & Linux.
 
-Even though most dependencies are fetched automatically by CMake (GLFW, GLAD, etc.), some system libraries must be installed manually because they come from your Linux distribution.
+---
 
-Full Ubuntu install example
-```
-sudo apt install cmake ninja-build g++ pkg-config \
-  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
-  libgl1-mesa-dev mesa-common-dev \
-  libwayland-dev libxkbcommon-dev wayland-protocols \
-```
+# 🐧 Linux Build Guide
 
-#### Required packages explanation
+Most dependencies (GLFW, GLAD, etc.) are fetched by CMake automatically.  
+However, **some low-level system libraries must be installed manually** because they come from your distro.
 
+---
+
+## 📦 Required System Packages
+
+### Build tools
 - `cmake`
-- `ninja`
+- `ninja` or `ninja-build`
 - `g++`
 - `pkg-config`
 
-#### OpenGL & window-system development libraries
+---
 
-GLFW requires X11 or Wayland development headers to be present. Install the ones matching your system:
+## 🖼️ Window system development libraries
 
-##### X11 (default on most distros)
+GLFW requires either **X11** or **Wayland** headers to be installed.
 
-- `libx11-dev`
-- `libxrandr-dev`
-- `libxinerama-dev`
-- `libxcursor-dev`
-- `libxi-dev`
-- `libgl1-mesa-dev`
-
-##### Wayland
-
-If you are using wayland, you will also need:
-
-- `libwayland-dev`
-- `libxkbcommon-dev`
-- `wayland-protocols`
-
-#### OpenGL development headers
-
-These provide <GL/gl.h> and Mesa’s GL implementation:
-
-- Ubuntu/Debian: `mesa-common-dev`
-- Arch: included in `mesa`
-- Fedora: `mesa-libGL-devel`
-
-#### Building
+### 🪟 X11 (default on most distros)
 ```
+libx11-dev
+libxrandr-dev
+libxinerama-dev
+libxcursor-dev
+libxi-dev
+libgl1-mesa-dev
+```
+
+### 🌊 Wayland (optional)
+If your system uses Wayland:
+
+```
+libwayland-dev
+libxkbcommon-dev
+wayland-protocols
+```
+
+---
+
+## 🧩 OpenGL development headers
+
+These provide `<GL/gl.h>` and Mesa’s OpenGL implementation.
+
+- Ubuntu/Debian → `mesa-common-dev`
+- Arch → included in `mesa`
+- Fedora → `mesa-libGL-devel`
+
+---
+
+## 🧪 Full Ubuntu example install
+
+```bash
+sudo apt install cmake ninja-build g++ pkg-config \
+  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+  libgl1-mesa-dev mesa-common-dev \
+  libwayland-dev libxkbcommon-dev wayland-protocols
+```
+
+---
+
+## 🔨 Building the project
+
+```bash
 cmake --preset=linux-debug
 cd build/linux-debug
 ninja
 ```
-If a system dependency is missing, CMake will print an error during configuration. Just install it via your package manager.
 
-#### Running
+If anything is missing, **CMake will tell you** during configuration.
 
-The executable is located in: `{projectRoot}/bin/Linux64/Debug/OpenTetris`
-Run it with:
+---
+
+## ▶️ Running
+
+Executable path:
+
 ```
+{projectRoot}/bin/Linux64/Debug/OpenTetris
+```
+
+Run it:
+
+```bash
 cd bin/Linux/Debug
 ./OpenTetris
-
 ```
 
-### Windows
+---
 
-This project is intended to be built with Visual Studio’s MSVC compiler.
-Tested on Visual Studio 2022 and Visual Studio 2026 Preview.
+# 🪟 Windows Build Guide
 
-Open the project using:
+This project uses **MSVC** and was tested on:
 
-File → Open → Folder… (NOT “Open Solution”), since the project is CMake-based.
+- Visual Studio 2022
+- Visual Studio 2026 Preview
 
-Visual Studio will automatically detect the Windows presets (Debug/Release, x86/x64) and allow building and running the executable directly.
+### 📁 Opening the project
+
+Use:
+
+**File → Open → Folder…**
+
+❌ *Do NOT use “Open Solution File”* — this is a pure CMake project.
+
+Visual Studio will automatically detect the available presets (Debug/Release, x86/x64).  
+You can then build and run directly from the IDE.
+
+---
+
+# ✔ Done!
+
+```
