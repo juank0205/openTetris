@@ -51,7 +51,8 @@ Full Ubuntu install example
 ```
 sudo apt install cmake ninja-build g++ pkg-config \
   libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
-  libgl1-mesa-dev mesa-common-dev
+  libgl1-mesa-dev mesa-common-dev \
+  libwayland-dev libxkbcommon-dev wayland-protocols \
 ```
 
 #### Building
