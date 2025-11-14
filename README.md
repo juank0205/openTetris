@@ -16,6 +16,7 @@ Even though most dependencies are fetched automatically by CMake (GLFW, GLAD, et
 - `cmake`
 - `ninja`
 - `g++`
+- `pkg-config`
 
 #### OpenGL & window-system development libraries
 
@@ -48,7 +49,7 @@ These provide <GL/gl.h> and Mesa’s GL implementation:
 
 Full Ubuntu install example
 ```
-sudo apt install cmake ninja-build g++ \
+sudo apt install cmake ninja-build g++ pkg-config \
   libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
   libgl1-mesa-dev mesa-common-dev
 ```
