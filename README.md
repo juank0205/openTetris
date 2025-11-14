@@ -40,7 +40,6 @@ The previous command installed the following packages:
 
 GLFW requires either **X11** or **Wayland** headers to be installed.
 
-### 🪟 X11 (default on most distros)
 ```
 libx11-dev
 libxrandr-dev
@@ -48,12 +47,6 @@ libxinerama-dev
 libxcursor-dev
 libxi-dev
 libgl1-mesa-dev
-```
-
-### 🌊 Wayland (optional)
-If your system uses Wayland, which new Ubuntu versions do (including wsl):
-
-```
 libwayland-dev
 libxkbcommon-dev
 wayland-protocols
