@@ -2,6 +2,11 @@
 
 A (pretty mediocre, but fun) implementation of **Tetris** in **C++** using **OpenGL**, built for **Windows** and **Linux**.
 
+Controls:
+- Move: Left/Right arrow
+- Rotate left: Z
+- Rotate right: X
+
 ---
 
 # 🛠️ Build Instructions
