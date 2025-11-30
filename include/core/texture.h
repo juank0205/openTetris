@@ -1,16 +1,16 @@
 #pragma once
 
-class Texture{
-public:
-	unsigned int ID;
-	unsigned int Width, Height;
-	unsigned int InternalFormat;
-	unsigned int ImageFormat;
-	unsigned int WrapS;
-	unsigned int WrapT;
-	unsigned int FilterMin;
-	unsigned int FilterMax;
-	Texture();
-	void Generate(unsigned int width, unsigned int height, unsigned char *data);
-	void Bind() const;
+struct Texture {
+  unsigned int ID;
+  unsigned int Width, Height;
+  int InternalFormat;
+  int ImageFormat;
+  int WrapS;
+  int WrapT;
+  int FilterMin;
+  int FilterMax;
 };
+
+Texture init_texture();
+void bind_texture(const Texture &texture);
+void generate_texture(Texture &texture, int width, int height, unsigned char *data);

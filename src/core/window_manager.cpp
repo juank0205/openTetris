@@ -1,69 +1,82 @@
 #include "window_manager.h"
+
+#include <GLFW/glfw3.h>
+#include <array>
 #include <iostream>
 
-void frame_buffer_size_callback(GLFWwindow *window, int width, int height) {
+#define OPENGL_MAYOR_VERSION 4
+#define OPENGL_MINOR_VERSION 5
+
+namespace {
+
+void frame_buffer_size_callback(GLFWwindow *window, int width, // NOLINT
+                                int height) {
   glViewport(0, 0, width, height);
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action,
-                  int mode) {
-  auto *wm = static_cast<WindowManager *>(glfwGetWindowUserPointer(window));
-  if (!wm)
+void key_callback(GLFWwindow *window, int key, int scancode, // NOLINT
+                  int action,                                // NOLINT
+                  int mode) {                                // NOLINT
+  bool *keys = static_cast<bool *>(glfwGetWindowUserPointer(window));
+  if (keys == nullptr) {
     return;
+  }
 
   // when a user presses the escape key, we set the WindowShouldClose property
   // to true, closing the application
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-  if (key >= 0 && key < 1024) {
-    if (action == GLFW_PRESS)
-      wm->Keys[key] = true;
-    else if (action == GLFW_RELEASE)
-      wm->Keys[key] = false;
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
+  }
+  if (key >= 0 && key < KEYS_ARRAY_SIZE) {
+    if (action == GLFW_PRESS) {
+      keys[key] = true;
+    } else if (action == GLFW_RELEASE) {
+      keys[key] = false;
+    }
   }
 }
+} // namespace
 
-WindowManager::WindowManager() {
+void init_gl_context() {
   glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_MAYOR_VERSION);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_MINOR_VERSION);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 }
 
-void WindowManager::Clean() { glfwTerminate(); }
+void clean_gl_context() { glfwTerminate(); }
 
-int WindowManager::CreateWindow(int width, int height, const char *name) {
-  m_window = glfwCreateWindow(width, height, name, NULL, NULL);
-  if (m_window == NULL) {
-    std::cout << "Failed to create GLFW window" << std::endl;
+GLFWwindow *create_window(int width, int height, const char *name,
+                          std::array<bool, KEYS_ARRAY_SIZE> &keys) {
+  GLFWwindow *window = glfwCreateWindow(width, height, name, nullptr, nullptr);
+  if (window == nullptr) {
+    std::cout << "Failed to create GLFW window" << '\n';
     glfwTerminate();
-    return -1;
+    return nullptr;
   }
-  glfwMakeContextCurrent(m_window);
+  glfwMakeContextCurrent(window);
 
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    std::cout << "Failed to initialize GLAD" << std::endl;
+  if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == GL_FALSE) {
+    std::cout << "Failed to initialize GLAD" << '\n';
   }
 
-  glfwSetWindowUserPointer(m_window, this);
-  glfwSetKeyCallback(m_window, key_callback);
-  glfwSetFramebufferSizeCallback(m_window, frame_buffer_size_callback);
-  m_isRunning = true;
+  glfwSetWindowUserPointer(window, keys.data());
+  glfwSetKeyCallback(window, key_callback);
+  glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
 
-  return 0;
+  return window;
 }
 
-void WindowManager::ClearColor() {
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+void clear_color() {
+  glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void WindowManager::PollEvents() { glfwPollEvents(); }
+void poll_events() { glfwPollEvents(); }
 
-void WindowManager::SwapBuffers() { glfwSwapBuffers(m_window); }
+void swap_buffers(GLFWwindow *window) { glfwSwapBuffers(window); }
 
-void WindowManager::CheckWindowStatus() {
-  if (glfwWindowShouldClose(m_window))
-    m_isRunning = false;
+bool check_window_status(GLFWwindow *window) {
+  return glfwWindowShouldClose(window) == GL_FALSE;
 }

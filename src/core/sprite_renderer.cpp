@@ -2,61 +2,62 @@
 #include "shader.h"
 #include "texture.h"
 
+#include <array>
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
-
-SpriteRenderer::SpriteRenderer() {}
-
-SpriteRenderer::~SpriteRenderer() {}
 
 void SpriteRenderer::Clean() { glDeleteVertexArrays(1, &this->quadVAO); }
 
 void SpriteRenderer::SetShader(ShaderProgram &shader) { this->shader = shader; }
 
-void SpriteRenderer::DrawSprite(Texture &texture, glm::vec2 position,
-                                glm::vec2 size, float rotate, glm::vec3 color) {
-  this->shader.Use();
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(model, glm::vec3(position, 0.0f));
+void SpriteRenderer::DrawSprite(Texture &texture, const Sprite &sprite) {
+  use_shader_program(this->shader);
+  auto model = glm::mat4(1.0F);
+  model = glm::translate(model, glm::vec3(sprite.position, 0.0F));
 
-  model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5 * size.y, 0.0f));
-  model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-  model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5 * size.y, 0.0f));
+  model = glm::translate(model, glm::vec3(0.5F * sprite.size.x, // NOLINT
+                                          0.5 * sprite.size.y, 0.0F)); // NOLINT
+  model = glm::rotate(model, glm::radians(sprite.rotate),
+                      glm::vec3(0.0F, 0.0F, 1.0F));
+  model =
+      glm::translate(model, glm::vec3(-0.5F * sprite.size.x,	// NOLINT
+                                      sprite.size.y * -0.5, 0.0F)); // NOLINT
 
-  model = glm::scale(model, glm::vec3(size, 1.0f));
+  model = glm::scale(model, glm::vec3(sprite.size, 1.0F));
 
-  this->shader.SetMatrix4f("model", model);
-  this->shader.SetVector3f("spriteColor", color);
+  shader_program_set_matrix4(this->shader, "model", model);
+  shader_program_set_vector3f(this->shader, "spriteColor", sprite.color);
   glActiveTexture(GL_TEXTURE0);
-  texture.Bind();
+  bind_texture(texture);
 
   glBindVertexArray(this->quadVAO);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDrawArrays(GL_TRIANGLES, 0, 6); // NOLINT
   glBindVertexArray(0);
 }
 
 void SpriteRenderer::InitRenderData() {
   unsigned int VBO;
-  float vertices[] = {
-      0.0f, 1.0f, 0.0f, 1.0f, //
-      1.0f, 0.0f, 1.0f, 0.0f, //
-      0.0f, 0.0f, 0.0f, 0.0f, //
+  std::array<float, 24> vertices[] = { // NOLINT
+      // NOLINT
+      0.0F, 1.0F, 0.0F, 1.0F, //
+      1.0F, 0.0F, 1.0F, 0.0F, //
+      0.0F, 0.0F, 0.0F, 0.0F, //
 
-      0.0f, 1.0f, 0.0f, 1.0f, //
-      1.0f, 1.0f, 1.0f, 1.0f, //
-      1.0f, 0.0f, 1.0f, 0.0f  //
+      0.0F, 1.0F, 0.0F, 1.0F, //
+      1.0F, 1.0F, 1.0F, 1.0F, //
+      1.0F, 0.0F, 1.0F, 0.0F  //
   };
 
   glGenVertexArrays(1, &this->quadVAO); // Create vertex array object
   glGenBuffers(1, &VBO);                // Create buffer object
   glBindBuffer(GL_ARRAY_BUFFER, VBO);   // bind buffer
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices->data()), vertices->data(),
                GL_STATIC_DRAW); // set buffer data
 
   glBindVertexArray(this->quadVAO); // bind vao
   glEnableVertexAttribArray(0);     // enable
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                        (void *)0); // setup layout
-  glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind both
+                        (void *)nullptr); // setup layout
+  glBindBuffer(GL_ARRAY_BUFFER, 0);       // unbind both
   glBindVertexArray(0);
 }
