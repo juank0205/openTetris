@@ -1,0 +1,13 @@
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  misc-*,
+  -modernize-use-trailing-return-type,
+  -misc-include-cleaner,
+  -readability-identifier-length
+
+WarningsAsErrors: '*'
+HeaderFilterRegex: '^(src|include)/'

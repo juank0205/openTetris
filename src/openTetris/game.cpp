@@ -1,10 +1,13 @@
 #include "game.h"
 #include "board.h"
 #include "game_constants.h"
+#include "gl_debug.h"
+#include "glm/fwd.hpp"
 #include "resource_manager.h"
 #include "shader.h"
 #include "shape.h"
 #include "sprite_renderer.h"
+#include "window_manager.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -13,21 +16,50 @@
 #include <random>
 #include <vector>
 
-Game::Game(float width, float height, const char *window_name)
-    : width(width), height(height), window_name(window_name) {}
+namespace {
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<int> distr(0, SHAPES_NUMBER);
+
+void setup_world_coordinates(int windowWidth, int windowHeight,
+                             ShaderProgram &shader);
+
+void setup_world_coordinates(int windowWidth, int windowHeight,
+                             ShaderProgram &shader) {
+  const int scaleX = BOARD_WIDTH_PIXELS / GRID_WIDTH;
+  const int scaleY = BOARD_HEIGHT_PIXELS / GRID_HEIGHT;
+  const int offsetX = (windowWidth - BOARD_WIDTH_PIXELS) / 2;
+  const int offsetY = (windowHeight - BOARD_HEIGHT_PIXELS) / 2;
+  glm::mat4 view =
+      glm::translate(glm::mat4(1.0F), glm::vec3(offsetX, offsetY, 0.0F));
+  view = glm::scale(view, glm::vec3(scaleX, scaleY, 1.0F));
+  const glm::mat4 projection =
+      glm::ortho(0.0F, (float)windowWidth, 0.0F, (float)windowHeight);
+  shader_program_set_matrix4(shader, "projection", projection,
+                             true); // Uses shader
+  shader_program_set_matrix4(shader, "view", view);
+  unbind_shader_program();
+}
+
+} // namespace
+
+Game::Game(int width, int height, const char *window_name) // NOLINT
+    : width(width), height(height), window_name(window_name),
+      currentShape(ShapeType::S, 0, 0) {}
 
 void Game::Setup() {
-  this->window_manager.CreateWindow(this->width, this->height,
-                                    this->window_name);
+  init_gl_context();
+  this->window =
+      create_window(this->width, this->height, this->window_name, keys);
   this->sprite_renderer.InitRenderData();
 
-  this->resource_manager.LoadShader(
-      "res/shaders/sprite.vert", "res/shaders/sprite.frag", nullptr, "sprite");
+  this->resource_manager.LoadShader({.vertex = "res/shaders/sprite.vert",
+                                     .fragment = "res/shaders/sprite.frag"},
+                                    "sprite");
   ShaderProgram &spriteShader = this->resource_manager.GetShader("sprite");
 
-  setupWorldCoordinates(width, height, spriteShader);
-  spriteShader.SetInteger("image", 0, true); // Uses shader
-                                             //
+  setup_world_coordinates(width, height, spriteShader);
+  shader_program_set_integer(spriteShader, "image", 0, true); // Uses shader
   this->sprite_renderer.SetShader(spriteShader);
   loadTextures();
   generateNewShape();
@@ -35,44 +67,25 @@ void Game::Setup() {
 
 void Game::Run() {
 
-  float deltaTime = 0.0f;
-  float lastFrame = 0.0f;
+  double deltaTime = 0.0F;
+  double lastFrame = 0.0F;
 
-  while (this->window_manager.GetIsRunning()) {
-
-    float currentframe = glfwGetTime();
+  while (check_window_status(window)) {
+    const double currentframe = glfwGetTime();
     deltaTime = currentframe - lastFrame;
     lastFrame = currentframe;
 
-    this->window_manager.PollEvents();
-
+    poll_events();
     processInput(deltaTime);
     update(deltaTime);
-
-    this->window_manager.ClearColor();
+    clear_color();
 
     render();
 
-    this->window_manager.SwapBuffers();
-    this->window_manager.CheckWindowStatus();
+    swap_buffers(window);
   }
 
   clean();
-}
-
-void Game::setupWorldCoordinates(float windowWidth, float windowHeight,
-                                 ShaderProgram &shader) {
-  float scaleX = BOARD_WIDTH_PIXELS / GRID_WIDTH;
-  float scaleY = BOARD_HEIGHT_PIXELS / GRID_HEIGHT;
-  float offsetX = (windowWidth - BOARD_WIDTH_PIXELS) / 2.0f;
-  float offsetY = (windowHeight - BOARD_HEIGHT_PIXELS) / 2.0f;
-  glm::mat4 view =
-      glm::translate(glm::mat4(1.0f), glm::vec3(offsetX, offsetY, 0.0f));
-  view = glm::scale(view, glm::vec3(scaleX, scaleY, 1.0f));
-  glm::mat4 projection = glm::ortho(0.0f, windowWidth, 0.0f, windowHeight);
-  shader.SetMatrix4f("projection", projection, true); // Uses shader
-  shader.SetMatrix4f("view", view);
-  shader.Unbind();
 }
 
 void Game::loadTextures() {
@@ -80,31 +93,36 @@ void Game::loadTextures() {
   this->resource_manager.LoadTexture("res/textures/tile.png", true, "tile");
   this->resource_manager.LoadTexture("res/textures/background.jpg", true,
                                      "background");
+  glGetError();
 }
 
 void Game::drawBackground() {
   sprite_renderer.DrawSprite(resource_manager.GetTexture("background"),
-                             glm::vec2(0.0f),
-                             glm::vec2(GRID_WIDTH, GRID_HEIGHT), 0.0f);
+                             {.position = glm::vec2(0.0F),
+                              .size = glm::vec2(GRID_WIDTH, GRID_HEIGHT),
+                              .rotate = 0.0F});
+  glGetError();
 }
 
 void Game::render() {
   drawBackground();
   board.Draw(sprite_renderer, resource_manager.GetTexture("tile"));
   currentShape.Draw(sprite_renderer, resource_manager.GetTexture("tile"));
+  glGetError();
 }
 
-void Game::update(float deltaTime) {
+void Game::update(double deltaTime) {
   fallTimer += deltaTime;
-  if (fallTimer < fallInterval)
+  if (fallTimer < fallInterval) {
     return;
+  }
 
   auto validator = [&](const std::vector<TilePosition> &positions) {
-    return !board.CheckCollision(positions); // you implement this
+    return !board.CheckCollision(positions);
   };
 
   currentShape.Update(validator);
-  fallTimer = 0.0f;
+  fallTimer = 0.0F;
 
   auto shapeTiles = currentShape.GetTilePositions();
   if (board.CheckShapeMovement(shapeTiles)) {
@@ -118,7 +136,7 @@ void Game::update(float deltaTime) {
   }
 }
 
-void Game::processInput(float deltaTime) {
+void Game::processInput(double deltaTime) {
   moveTimer += deltaTime;
   rotateTimer += deltaTime;
 
@@ -126,34 +144,31 @@ void Game::processInput(float deltaTime) {
     return !board.CheckCollision(positions); // you implement this
   };
 
-  if (window_manager.Keys[GLFW_KEY_RIGHT] && moveTimer >= moveCooldown) {
+  if (keys[GLFW_KEY_RIGHT] && moveTimer >= moveCooldown) {
     currentShape.Move(SHAPE_DIRECTION_RIGHT, validator);
-    moveTimer = 0.0f;
+    moveTimer = 0.0F;
   }
-  if (window_manager.Keys[GLFW_KEY_LEFT] && moveTimer >= moveCooldown) {
+  if (keys[GLFW_KEY_LEFT] && moveTimer >= moveCooldown) {
     currentShape.Move(SHAPE_DIRECTION_LEFT, validator);
-    moveTimer = 0.0f;
+    moveTimer = 0.0F;
   }
 
-  if (window_manager.Keys[GLFW_KEY_X] && rotateTimer >= rotateCooldown) {
+  if (keys[GLFW_KEY_X] && rotateTimer >= rotateCooldown) {
     currentShape.Rotate(SHAPE_DIRECTION_RIGHT, validator);
-    rotateTimer = 0.0f;
+    rotateTimer = 0.0F;
   }
-  if (window_manager.Keys[GLFW_KEY_Z] && rotateTimer >= rotateCooldown) {
+  if (keys[GLFW_KEY_Z] && rotateTimer >= rotateCooldown) {
     currentShape.Rotate(SHAPE_DIRECTION_LEFT, validator);
-    rotateTimer = 0.0f;
+    rotateTimer = 0.0F;
   }
 }
 
-static std::random_device rd;
-static std::mt19937 gen(rd());
-static std::uniform_int_distribution<int> distr(0, 6);
 void Game::generateNewShape() {
-  int shapeIndex = distr(gen);
-  ShapeType type = static_cast<ShapeType>(shapeIndex);
+  const int shapeIndex = distr(gen);
+  auto type = static_cast<ShapeType>(shapeIndex);
 
-  int initialX = GRID_WIDTH / 2;
-  int initialY = GRID_HEIGHT - 2; // top row (y increasing upwards)
+  const int initialX = GRID_WIDTH / 2;
+  const int initialY = GRID_HEIGHT - 2; // top row (y increasing upwards)
 
   // Construct the new shape and set currentShape
   currentShape = Shape(type, initialX, initialY);
@@ -162,5 +177,5 @@ void Game::generateNewShape() {
 void Game::clean() {
   this->resource_manager.Clear();
   this->sprite_renderer.Clean();
-  this->window_manager.Clean();
+  clean_gl_context();
 }

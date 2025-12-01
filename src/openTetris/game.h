@@ -1,46 +1,46 @@
 #pragma once
 
 #include "board.h"
+#include "game_constants.h"
 #include "resource_manager.h"
-#include "shader.h"
 #include "shape.h"
 #include "sprite_renderer.h"
 #include "window_manager.h"
+#include <array>
 
 class Game {
 public:
-  Game(float width, float height, const char *window_name);
-  ~Game() {}
+  Game(int width, int height, const char *window_name);
 
   void Setup();
   void Run();
 
 private:
   ResourceManager resource_manager;
-  WindowManager window_manager;
+  GLFWwindow *window;
   SpriteRenderer sprite_renderer;
   Board board;
   Shape currentShape;
 
   void render();
-  void update(float deltaTime);
-  void processInput(float deltaTime);
+  void update(double deltaTime);
+  void processInput(double deltaTime);
   void clean();
   void generateNewShape();
-  void setupWorldCoordinates(float windowWidth, float windowHeight,
-                             ShaderProgram &shader);
   void drawBackground();
   void loadTextures();
 
-  float width;
-  float height;
+  int width;
+  int height;
   const char *window_name;
-  float fallTimer = 0.0f;
-  float fallInterval = 0.15f; // seconds per automatic fall
+  std::array<bool, KEYS_ARRAY_SIZE> keys = {false};
 
-  float moveTimer = 0.0f;
-  float moveCooldown = 0.1f;
+  double fallTimer = 0.0F;
+  double fallInterval = FALL_INTERVAL; // seconds per automatic fall
 
-  float rotateTimer = 0.0f;
-  float rotateCooldown = 0.2f;
+  double moveTimer = 0.0F;
+  double moveCooldown = MOVE_COOLDOWN;
+
+  double rotateTimer = 0.0F;
+  double rotateCooldown = ROTATE_COOLDOWN;
 };

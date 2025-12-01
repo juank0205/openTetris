@@ -1,10 +1,14 @@
 // #include "app.h"
 #include "game.h"
+#include <cstdint>
 
-int main(int argc, char *argv[]) {
+enum class WindowDimensions : std::uint16_t { height = 600, width = 800 };
+
+int main() {
   // App app;
   // app.run();
-  Game game(800, 600, "Lets go");
+  Game game(static_cast<int>(WindowDimensions::width),
+            static_cast<int>(WindowDimensions::height), "Lets go");
   game.Setup();
   game.Run();
 }

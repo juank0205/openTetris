@@ -6,22 +6,23 @@
 #include <map>
 #include <string>
 
+struct ShaderPaths {
+  const char *vertex;
+  const char *fragment;
+  const char *geometry = nullptr; // optional
+};
+
 class ResourceManager {
 public:
-  ResourceManager() {}
-  ShaderProgram &LoadShader(const char *vertexSource, const char *fragmentSource,
-                           const char *geometrySource, std::string name);
-  ShaderProgram &GetShader(std::string name);
-  Texture &LoadTexture(const char *file, bool alpha, std::string name);
-  Texture &GetTexture(std::string name);
+  ShaderProgram &LoadShader(const ShaderPaths &paths, const std::string &name);
+  ShaderProgram &GetShader(const std::string &name);
+  Texture &LoadTexture(const char *file, bool alpha, const std::string &name);
+  Texture &GetTexture(const std::string &name);
   void Clear();
 
 private:
-  ShaderProgram loadShaderFromFile(const char *vertexSource,
-                                   const char *fragmentSource,
-                                   const char *geometrySource,
-                                   std::string name);
-  Texture loadTextureFromFile(const char *file, bool alpha);
+  static ShaderProgram loadShaderFromFile(const ShaderPaths &path);
+  static Texture loadTextureFromFile(const char *file, bool alpha);
   std::map<std::string, ShaderProgram> shaders;
   std::map<std::string, Texture> textures;
 };

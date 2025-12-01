@@ -52,6 +52,13 @@ add_subdirectory(external/glad)
 # STB_IMAGE
 add_subdirectory(external/stb_image)
 
+# Static analysis
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-warnings-as-errors=*")
+file(GLOB_RECURSE ALL_SRC_FILES src/*.cpp)
+add_custom_target(clang_tidy
+    COMMAND clang-tidy -p ${CMAKE_BINARY_DIR} ${ALL_SRC_FILES}
+    COMMENT "Running clang-tidy on all sources"
+)
 
 # add_subdirectory(src)
 add_subdirectory(src/core)
