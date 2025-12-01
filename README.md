@@ -25,7 +25,7 @@ However, **some low-level system libraries must be installed manually** because 
 ### 🧪 Full Ubuntu packages install
 
 ```bash
-sudo apt install cmake ninja-build g++ pkg-config \
+sudo apt install cmake ninja-build clang++ pkg-config \
   libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
   libgl1-mesa-dev mesa-common-dev \
   libwayland-dev libxkbcommon-dev wayland-protocols
@@ -38,7 +38,7 @@ The previous command installed the following packages:
 ### Build tools
 - `cmake`
 - `ninja` or `ninja-build`
-- `g++`
+- `clang++`
 - `pkg-config`
 
 ### Window system development libraries

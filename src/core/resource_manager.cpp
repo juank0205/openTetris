@@ -2,7 +2,6 @@
 #include "shader.h"
 #include "texture.h"
 
-#include <exception>
 #include <fstream>
 #include <glad/glad.h>
 #include <iostream>
@@ -43,30 +42,43 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   std::string vertexCode;
   std::string fragmentCode;
   std::string geometryCode;
-  try {
-    std::ifstream vertexShaderFile(path.vertex);
-    std::ifstream fragmentShaderFile(path.fragment);
-    std::stringstream vShaderStream;
-    std::stringstream fShaderStream;
 
-    vShaderStream << vertexShaderFile.rdbuf();
-    fShaderStream << fragmentShaderFile.rdbuf();
+  // Load vertex shader
+  std::ifstream vertexShaderFile(path.vertex);
+  if (!vertexShaderFile.is_open()) {
+    std::cerr << "ERROR::SHADER: Failed to open vertex shader: " << path.vertex
+              << "\n";
+    return {}; // return default-constructed ShaderProgram
+  }
+  std::stringstream vShaderStream;
+  vShaderStream << vertexShaderFile.rdbuf();
+  vertexCode = vShaderStream.str();
+  vertexShaderFile.close();
 
-    vertexShaderFile.close();
-    fragmentShaderFile.close();
-    vertexCode = vShaderStream.str();
+  // Load fragment shader
+  std::ifstream fragmentShaderFile(path.fragment);
+  if (!fragmentShaderFile.is_open()) {
+    std::cerr << "ERROR::SHADER: Failed to open fragment shader: "
+              << path.fragment << "\n";
+    return {};
+  }
+  std::stringstream fShaderStream;
+  fShaderStream << fragmentShaderFile.rdbuf();
+  fragmentCode = fShaderStream.str();
+  fragmentShaderFile.close();
 
-    fragmentCode = fShaderStream.str();
-
-    if (path.geometry != nullptr) {
-      std::ifstream geometryShaderFile(path.geometry);
-      std::stringstream gShaderStream;
-      gShaderStream << geometryShaderFile.rdbuf();
-      geometryShaderFile.close();
-      geometryCode = gShaderStream.str();
+  // Load geometry shader if provided
+  if (path.geometry != nullptr) {
+    std::ifstream geometryShaderFile(path.geometry);
+    if (!geometryShaderFile.is_open()) {
+      std::cerr << "ERROR::SHADER: Failed to open geometry shader: "
+                << path.geometry << "\n";
+      return {};
     }
-  } catch (std::exception &e) {
-    std::cout << "ERROR::SHADER: Failed to read shader files" << '\n';
+    std::stringstream gShaderStream;
+    gShaderStream << geometryShaderFile.rdbuf();
+    geometryCode = gShaderStream.str();
+    geometryShaderFile.close();
   }
 
   const char *vShaderCode = vertexCode.c_str();
@@ -77,6 +89,7 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
       {.vertex = vShaderCode,
        .fragment = fShaderCode,
        .geometry = path.geometry != nullptr ? gShaderCode : nullptr});
+
   return shader;
 }
 
@@ -94,8 +107,12 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
   unsigned char *data =
       stbi_load(file, &width, &height, &nrChannels, alpha ? 4 : 3);
 
+  if (data == nullptr) {
+    std::cerr << "Failed to load texture: " << file << '\n';
+    return texture;
+  }
   generate_texture(texture, width, height, data);
-  
+
   stbi_image_free(data);
   return texture;
 }

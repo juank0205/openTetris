@@ -2,15 +2,18 @@
 
 #include <array>
 #include <csignal>
+#include <cstdint>
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <string>
 
-#define INFO_LOG_BUFFER_SIZE 1024
-#define UNDEFINED_GEOMETRY_SHADER 0
-
 namespace {
+
+enum class ShaderConstants : std::uint16_t {
+  logBufferSize = 1024,
+  undefinedGeometryShader = 0
+};
 
 struct ShaderIds {
   unsigned int vertex;
@@ -34,11 +37,13 @@ inline void debugBreak() {
 
 void check_compile_errors(unsigned int object, const std::string &type) {
   int success;
-  std::array<char, INFO_LOG_BUFFER_SIZE> infoLog;
+  std::array<char, static_cast<int>(ShaderConstants::logBufferSize)> infoLog;
   if (type != "PROGRAM") {
     glGetShaderiv(object, GL_COMPILE_STATUS, &success);
     if (success == GL_FALSE) {
-      glGetShaderInfoLog(object, INFO_LOG_BUFFER_SIZE, nullptr, infoLog.data());
+      glGetShaderInfoLog(object,
+                         static_cast<int>(ShaderConstants::logBufferSize),
+                         nullptr, infoLog.data());
       std::cout
           << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
           << infoLog.data()
@@ -49,8 +54,9 @@ void check_compile_errors(unsigned int object, const std::string &type) {
   } else {
     glGetProgramiv(object, GL_LINK_STATUS, &success);
     if (success == GL_FALSE) {
-      glGetProgramInfoLog(object, INFO_LOG_BUFFER_SIZE, nullptr,
-                          infoLog.data());
+      glGetProgramInfoLog(object,
+                          static_cast<int>(ShaderConstants::logBufferSize),
+                          nullptr, infoLog.data());
       std::cout
           << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
           << infoLog.data()
@@ -62,7 +68,7 @@ void check_compile_errors(unsigned int object, const std::string &type) {
 }
 
 unsigned int compile_shader(const char *source, unsigned int type) {
-  unsigned int id = glCreateShader(type);
+  const unsigned int id = glCreateShader(type);
   glShaderSource(id, 1, &source, nullptr);
   glCompileShader(id);
 
@@ -87,17 +93,19 @@ unsigned int compile_shader(const char *source, unsigned int type) {
 }
 
 unsigned int create_program(const ShaderIds &shaderIds) {
-  unsigned int id = glCreateProgram();
+  const unsigned int id = glCreateProgram();
   glAttachShader(id, shaderIds.vertex);
   glAttachShader(id, shaderIds.fragment);
-  if (shaderIds.geometry != UNDEFINED_GEOMETRY_SHADER) {
+  if (shaderIds.geometry !=
+      static_cast<int>(ShaderConstants::undefinedGeometryShader)) {
     glAttachShader(id, shaderIds.geometry);
   }
   glLinkProgram(id);
   check_compile_errors(id, "PROGRAM");
   glDeleteShader(shaderIds.vertex);
   glDeleteShader(shaderIds.fragment);
-  if (shaderIds.geometry != UNDEFINED_GEOMETRY_SHADER) {
+  if (shaderIds.geometry !=
+      static_cast<int>(ShaderConstants::undefinedGeometryShader)) {
     glDeleteShader(shaderIds.geometry);
   }
   return id;

@@ -12,7 +12,7 @@
 
 struct BoardPosition {
   bool active = false;
-  glm::vec3 color = glm::vec3(0.0f);
+  glm::vec3 color = glm::vec3(0.0F);
 };
 
 struct TilePosition {
@@ -23,12 +23,13 @@ struct TilePosition {
 
 class Board {
 public:
-  std::array<std::array<BoardPosition, GRID_WIDTH>, GRID_HEIGHT> BoardStatus;
   bool CheckShapeMovement(std::vector<TilePosition> &shape);
   std::vector<int> PlaceShape(std::vector<TilePosition> &shape);
   int CheckRows(const std::vector<int> &affectedRows);
   std::vector<int> UpdateBoard(int clearedRow = BOARD_NO_ROW_CLEARED);
 
   void Draw(SpriteRenderer &renderer, Texture &texture);
-  bool CheckCollision(const std::vector<TilePosition> &tiles) const;
+  [[nodiscard]] bool CheckCollision(const std::vector<TilePosition> &tiles) const;
+private:
+  std::array<std::array<BoardPosition, GRID_WIDTH>, GRID_HEIGHT> boardStatus;
 };

@@ -15,8 +15,8 @@ struct Sprite {
 
 class SpriteRenderer {
 public:
-  SpriteRenderer();
-  ~SpriteRenderer();
+  SpriteRenderer() = default;
+  ~SpriteRenderer() = default;
   void SetShader(ShaderProgram &shader);
   void DrawSprite(Texture &texture, const Sprite &sprite);
   void InitRenderData();

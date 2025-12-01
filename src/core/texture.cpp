@@ -5,7 +5,7 @@
 Texture init_texture() {
   Texture texture;
   texture.Width = 0;
-  texture.Width = 0;
+  texture.Height = 0;
   texture.InternalFormat = GL_RGB;
   texture.ImageFormat = GL_RGB;
   texture.WrapS = GL_REPEAT;
@@ -18,6 +18,8 @@ Texture init_texture() {
 void generate_texture(Texture &texture, int width, int height,
                       unsigned char *data) {
   texture.Height = height;
+  texture.Width = width;
+  glGenTextures(1, &texture.ID);
   glBindTexture(GL_TEXTURE_2D, texture.ID);
   glTexImage2D(GL_TEXTURE_2D, 0, texture.InternalFormat, width, height, 0,
                texture.ImageFormat, GL_UNSIGNED_BYTE, data);
@@ -26,6 +28,7 @@ void generate_texture(Texture &texture, int width, int height,
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.FilterMin);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.FilterMax);
   glBindTexture(GL_TEXTURE_2D, 0);
+  glGetError();
 }
 
 void bind_texture(const Texture &texture) {

@@ -1,4 +1,5 @@
 #include "sprite_renderer.h"
+#include "gl_debug.h"
 #include "shader.h"
 #include "texture.h"
 
@@ -37,7 +38,7 @@ void SpriteRenderer::DrawSprite(Texture &texture, const Sprite &sprite) {
 
 void SpriteRenderer::InitRenderData() {
   unsigned int VBO;
-  std::array<float, 24> vertices[] = { // NOLINT
+  std::array<float, 24> vertices = { // NOLINT
       // NOLINT
       0.0F, 1.0F, 0.0F, 1.0F, //
       1.0F, 0.0F, 1.0F, 0.0F, //
@@ -51,7 +52,7 @@ void SpriteRenderer::InitRenderData() {
   glGenVertexArrays(1, &this->quadVAO); // Create vertex array object
   glGenBuffers(1, &VBO);                // Create buffer object
   glBindBuffer(GL_ARRAY_BUFFER, VBO);   // bind buffer
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices->data()), vertices->data(),
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(),
                GL_STATIC_DRAW); // set buffer data
 
   glBindVertexArray(this->quadVAO); // bind vao

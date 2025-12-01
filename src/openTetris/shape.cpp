@@ -2,39 +2,63 @@
 #include "board.h"
 #include "texture.h"
 
+#include <glm/glm.hpp>
+#include <vector>
+
 Shape::Shape(ShapeType type, int initialX, int initialY) {
   glm::vec3 color;
   switch (type) {
   case ShapeType::I:
-    Tiles = {{0, 0}, {0, -1}, {0, 1}, {0, 2}};
-    color = glm::vec3(0.0f, 1.0f, 1.0f); // Cyan
+    Tiles = {{.x = 0, .y = 0},
+             {.x = 0, .y = -1},
+             {.x = 0, .y = 1},
+             {.x = 0, .y = 2}};
+    color = glm::vec3(0.0F, 1.0F, 1.0F); // Cyan
     break;
   case ShapeType::O:
-    Tiles = {{0, 0}, {1, 0}, {0, -1}, {1, -1}};
-    color = glm::vec3(1.0f, 1.0f, 0.0f); // Yellow
+    Tiles = {{.x = 0, .y = 0},
+             {.x = 1, .y = 0},
+             {.x = 0, .y = -1},
+             {.x = 1, .y = -1}};
+    color = glm::vec3(1.0F, 1.0F, 0.0F); // Yellow
     break;
   case ShapeType::T:
-    Tiles = {{0, 0}, {-1, 0}, {1, 0}, {0, -1}};
-    color = glm::vec3(0.6f, 0.0f, 0.6f); // Purple
+    Tiles = {{.x = 0, .y = 0},
+             {.x = -1, .y = 0},
+             {.x = 1, .y = 0},
+             {.x = 0, .y = -1}};
+    color = glm::vec3(0.6F, 0.0F, 0.6F); // Purple NOLINT
     break;
   case ShapeType::S:
-    Tiles = {{0, 0}, {1, 0}, {0, -1}, {-1, -1}};
-    color = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+    Tiles = {{.x = 0, .y = 0},
+             {.x = 1, .y = 0},
+             {.x = 0, .y = -1},
+             {.x = -1, .y = -1}};
+    color = glm::vec3(0.0F, 1.0F, 0.0F); // Green
     break;
   case ShapeType::Z:
-    Tiles = {{0, 0}, {-1, 0}, {0, -1}, {1, -1}};
-    color = glm::vec3(1.0f, 0.0f, 0.0f); // Red
+    Tiles = {{.x = 0, .y = 0},
+             {.x = -1, .y = 0},
+             {.x = 0, .y = -1},
+             {.x = 1, .y = -1}};
+    color = glm::vec3(1.0F, 0.0F, 0.0F); // Red
     break;
   case ShapeType::J:
-    Tiles = {{0, 0}, {0, -1}, {0, 1}, {-1, 1}};
-    color = glm::vec3(0.0f, 0.0f, 1.0f); // Blue
+    Tiles = {{.x = 0, .y = 0},
+             {.x = 0, .y = -1},
+             {.x = 0, .y = 1},
+             {.x = -1, .y = 1}};
+    color = glm::vec3(0.0F, 0.0F, 1.0F); // Blue
     break;
   case ShapeType::L:
-    Tiles = {{0, 0}, {0, -1}, {0, 1}, {1, 1}};
-    color = glm::vec3(1.0f, 0.5f, 0.0f); // Orange
+    Tiles = {{.x = 0, .y = 0},
+             {.x = 0, .y = -1},
+             {.x = 0, .y = 1},
+             {.x = 1, .y = 1}};
+    color = glm::vec3(1.0F, 0.5F, 0.0F); // Orange NOLINT
     break;
   }
-  BasePosition = {initialX, initialY, color};
+  BasePosition = {.x = initialX, .y = initialY, .color = color};
 }
 
 std::vector<TilePosition> Shape::GetTilePositions() {
@@ -52,12 +76,12 @@ std::vector<TilePosition> Shape::GetTilePositions() {
   return tilesPos;
 }
 
-void Shape::Rotate(unsigned int direction, MoveValidator validator) {
+void Shape::Rotate(unsigned int direction, const MoveValidator &validator) {
   std::vector<ShapeOffset> newOffsets = Tiles;
 
   for (auto &offset : newOffsets) {
-    int oldX = offset.x;
-    int oldY = offset.y;
+    const int oldX = offset.x;
+    const int oldY = offset.y;
     if (direction == SHAPE_DIRECTION_RIGHT) {
       offset.x = oldY;
       offset.y = -oldX;
@@ -71,67 +95,73 @@ void Shape::Rotate(unsigned int direction, MoveValidator validator) {
   std::vector<TilePosition> newPositions;
   newPositions.reserve(newOffsets.size());
   for (auto &offset : newOffsets) {
-    newPositions.push_back({BasePosition.x + offset.x,
-                            BasePosition.y + offset.y, BasePosition.color});
+    newPositions.push_back({.x = BasePosition.x + offset.x,
+                            .y = BasePosition.y + offset.y,
+                            .color = BasePosition.color});
   }
 
-  if (!validator(newPositions))
+  if (!validator(newPositions)) {
     return;
+  }
 
   Tiles = newOffsets;
 }
 
-void Shape::Update(MoveValidator validator) {
+void Shape::Update(const MoveValidator &validator) {
   TilePosition newBase = BasePosition;
   newBase.y--;
   std::vector<TilePosition> newPositions;
   newPositions.reserve(Tiles.size());
   for (auto &offset : Tiles) {
-    newPositions.push_back(
-        {newBase.x + offset.x, newBase.y + offset.y, BasePosition.color});
+    newPositions.push_back({.x = newBase.x + offset.x,
+                            .y = newBase.y + offset.y,
+                            .color = BasePosition.color});
   }
 
   // Validate move
-  if (!validator(newPositions))
+  if (!validator(newPositions)) {
     return;
+  }
   // Commit move
   BasePosition = newBase;
 }
 
-void Shape::Move(unsigned int direction, MoveValidator validator) {
+void Shape::Move(unsigned int direction, const MoveValidator &validator) {
   TilePosition newBase = BasePosition;
 
-  if (direction == SHAPE_DIRECTION_RIGHT)
+  if (direction == SHAPE_DIRECTION_RIGHT) {
     newBase.x++;
-  else if (direction == SHAPE_DIRECTION_LEFT)
+  } else if (direction == SHAPE_DIRECTION_LEFT) {
     newBase.x--;
+  }
 
   // Predict new positions
   std::vector<TilePosition> newPositions;
   newPositions.reserve(Tiles.size());
   for (auto &offset : Tiles) {
-    newPositions.push_back(
-        {newBase.x + offset.x, newBase.y + offset.y, BasePosition.color});
+    newPositions.push_back({.x = newBase.x + offset.x,
+                            .y = newBase.y + offset.y,
+                            .color = BasePosition.color});
   }
 
   // Validate move
-  if (!validator(newPositions))
+  if (!validator(newPositions)) {
     return;
+  }
   // Commit move
   BasePosition = newBase;
 }
 
 void Shape::Draw(SpriteRenderer &renderer, Texture &texture) {
   for (const auto &offset : Tiles) {
-    glm::vec2 pos(static_cast<float>(BasePosition.x + offset.x),
-                  static_cast<float>(BasePosition.y + offset.y));
+    const glm::vec2 pos(static_cast<float>(BasePosition.x + offset.x),
+                        static_cast<float>(BasePosition.y + offset.y));
 
-    renderer.DrawSprite(
-        texture,           // texture of the shape
-        pos,               // position in grid coordinates
-        glm::vec2(1.0f),   // size of one tile (can be scaled later)
-        0.0f,              // rotation
-        BasePosition.color // tile color
+    renderer.DrawSprite(texture,          // texture of the shape
+                        {.position = pos, // position in grid coordinates
+                         .size = glm::vec2(1.0F),     // size of one tile
+                         .rotate = 0.0F,              // rotation
+                         .color = BasePosition.color} // tile color
     );
   }
 }

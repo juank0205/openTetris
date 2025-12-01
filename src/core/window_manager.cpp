@@ -2,10 +2,10 @@
 
 #include <GLFW/glfw3.h>
 #include <array>
+#include <cstdint>
 #include <iostream>
 
-#define OPENGL_MAYOR_VERSION 4
-#define OPENGL_MINOR_VERSION 5
+enum class OpenGLVersion : std::uint8_t { Major = 4, Minor = 5 };
 
 namespace {
 
@@ -39,8 +39,10 @@ void key_callback(GLFWwindow *window, int key, int scancode, // NOLINT
 
 void init_gl_context() {
   glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_MAYOR_VERSION);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_MINOR_VERSION);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,
+                 static_cast<int>(OpenGLVersion::Major));
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,
+                 static_cast<int>(OpenGLVersion::Minor));
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 }
