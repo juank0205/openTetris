@@ -1,9 +1,9 @@
 #include "window_manager.h"
+#include "logger.h"
 
 #include <GLFW/glfw3.h>
 #include <array>
 #include <cstdint>
-#include <iostream>
 
 enum class OpenGLVersion : std::uint8_t { Major = 4, Minor = 5 };
 
@@ -53,14 +53,14 @@ GLFWwindow *create_window(int width, int height, const char *name,
                           std::array<bool, KEYS_ARRAY_SIZE> &keys) {
   GLFWwindow *window = glfwCreateWindow(width, height, name, nullptr, nullptr);
   if (window == nullptr) {
-    std::cout << "Failed to create GLFW window" << '\n';
+    LOG_ERROR("Failed to initialize GLFW");
     glfwTerminate();
     return nullptr;
   }
   glfwMakeContextCurrent(window);
 
   if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == GL_FALSE) {
-    std::cout << "Failed to initialize GLAD" << '\n';
+    LOG_ERROR("Failed to initialize GLAD");
   }
 
   glfwSetWindowUserPointer(window, keys.data());

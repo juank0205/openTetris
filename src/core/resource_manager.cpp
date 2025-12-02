@@ -1,4 +1,5 @@
 #include "resource_manager.h"
+#include "logger.h"
 #include "shader.h"
 #include "texture.h"
 
@@ -46,8 +47,7 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   // Load vertex shader
   std::ifstream vertexShaderFile(path.vertex);
   if (!vertexShaderFile.is_open()) {
-    std::cerr << "ERROR::SHADER: Failed to open vertex shader: " << path.vertex
-              << "\n";
+    LOG_ERROR("| ERROR: SHADER: Failed to open vertex shader: {}", path.vertex);
     return {}; // return default-constructed ShaderProgram
   }
   std::stringstream vShaderStream;
@@ -58,8 +58,8 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   // Load fragment shader
   std::ifstream fragmentShaderFile(path.fragment);
   if (!fragmentShaderFile.is_open()) {
-    std::cerr << "ERROR::SHADER: Failed to open fragment shader: "
-              << path.fragment << "\n";
+    LOG_ERROR("| ERROR: SHADER: Failed to open fragment shader: {}",
+              path.fragment);
     return {};
   }
   std::stringstream fShaderStream;
@@ -71,8 +71,8 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   if (path.geometry != nullptr) {
     std::ifstream geometryShaderFile(path.geometry);
     if (!geometryShaderFile.is_open()) {
-      std::cerr << "ERROR::SHADER: Failed to open geometry shader: "
-                << path.geometry << "\n";
+      LOG_ERROR("| ERROR: SHADER: Failed to open geometry shader: {}",
+                path.geometry);
       return {};
     }
     std::stringstream gShaderStream;

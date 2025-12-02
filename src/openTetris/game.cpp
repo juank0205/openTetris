@@ -2,6 +2,7 @@
 #include "board.h"
 #include "game_constants.h"
 #include "glm/fwd.hpp"
+#include "logger.h"
 #include "resource_manager.h"
 #include "shader.h"
 #include "shape.h"
@@ -163,6 +164,8 @@ void Game::processInput(double deltaTime) {
 }
 
 void Game::generateNewShape() {
+  LOG_TRACE("Shape generated!");
+  LOG_DEBUG("Shape generated! BUT DEBUG");
   const int shapeIndex = distr(gen);
   auto type = static_cast<ShapeType>(shapeIndex);
 
