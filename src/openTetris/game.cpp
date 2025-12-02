@@ -1,7 +1,6 @@
 #include "game.h"
 #include "board.h"
 #include "game_constants.h"
-#include "gl_debug.h"
 #include "glm/fwd.hpp"
 #include "resource_manager.h"
 #include "shader.h"
