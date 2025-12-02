@@ -1,7 +1,8 @@
 #pragma once
 #include <glad/glad.h>
-#include <iostream>
 #include <string>
+
+#include "logger.h"
 
 inline GLenum glCheckError_(const char *file, int line) {
   GLenum errorCode;
@@ -33,7 +34,7 @@ inline GLenum glCheckError_(const char *file, int line) {
       error = "HUH?";
       break;
     }
-    std::cout << error << " | " << file << " (" << line << ")\n";
+    LOG_DEBUG("{0} | {1} ({2})", error, file, line);
   }
   return errorCode;
 }

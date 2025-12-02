@@ -31,7 +31,9 @@ if (POLICY CMP0141)
 	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+
 include(FetchContent)
+# GLFW ----------------------------------------------------
 FetchContent_Declare(
 	glfw
 	GIT_REPOSITORY https://github.com/glfw/glfw
@@ -39,6 +41,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glfw)
 
+# GLM -----------------------------------------------------
 FetchContent_Declare(
 	glm
 	GIT_REPOSITORY https://github.com/g-truc/glm
@@ -46,17 +49,47 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
-# GLAD
+# SPDLOG  --------------------------------------------------
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.16.0 
+)
+FetchContent_MakeAvailable(spdlog)
+
+# GLAD  ----------------------------------------------------
 add_subdirectory(external/glad)
 
-# STB_IMAGE
+# STB_IMAGE ------------------------------------------------
 add_subdirectory(external/stb_image)
 
-# Static analysis
-set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-warnings-as-errors=*")
-file(GLOB_RECURSE ALL_SRC_FILES src/*.cpp)
-add_custom_target(clang_tidy
-    COMMAND clang-tidy -p ${CMAKE_BINARY_DIR} ${ALL_SRC_FILES}
+# Static analysis ------------------------------------------
+option(ENABLE_CLANG_TIDY "Enable clang-tidy checks during build" OFF)
+
+if(ENABLE_CLANG_TIDY)
+    set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-warnings-as-errors=*")
+endif()
+include(ProcessorCount)
+ProcessorCount(NPROC)
+if(NOT NPROC EQUAL 0)
+    message(STATUS "Number of processor cores: ${NPROC}")
+else()
+    set(NPROC 1)
+endif()
+file(GLOB_RECURSE ALL_SRC_FILES 
+    CONFIGURE_DEPENDS
+    src/core/*.cpp 
+    src/openTetris/*.cpp
+    main/*.cpp
+)
+set(REL_SRC_FILES "")
+foreach(src ${ALL_SRC_FILES})
+	file(RELATIVE_PATH rel_src ${CMAKE_SOURCE_DIR} ${src})
+    list(APPEND REL_SRC_FILES ${rel_src})
+endforeach()
+add_custom_target(clang-tidy
+	COMMAND run-clang-tidy -p ${CMAKE_BINARY_DIR} -j ${NPROC} ${REL_SRC_FILES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running clang-tidy on all sources"
 )
 

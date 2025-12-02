@@ -1,10 +1,10 @@
 #include "resource_manager.h"
+#include "logger.h"
 #include "shader.h"
 #include "texture.h"
 
 #include <fstream>
 #include <glad/glad.h>
-#include <iostream>
 #include <sstream>
 #include <stb_image/stb_image.h>
 #include <string>
@@ -12,6 +12,7 @@
 ShaderProgram &ResourceManager::LoadShader(const ShaderPaths &paths,
                                            const std::string &name) {
   shaders[name] = loadShaderFromFile(paths);
+  LOG_INFO("Loaded shader: {}", name);
   return shaders[name];
 }
 
@@ -22,6 +23,7 @@ ShaderProgram &ResourceManager::GetShader(const std::string &name) {
 Texture &ResourceManager::LoadTexture(const char *file, bool alpha,
                                       const std::string &name) {
   textures[name] = loadTextureFromFile(file, alpha);
+  LOG_INFO("Loaded texture: {}", name);
   return textures[name];
 }
 
@@ -46,8 +48,7 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   // Load vertex shader
   std::ifstream vertexShaderFile(path.vertex);
   if (!vertexShaderFile.is_open()) {
-    std::cerr << "ERROR::SHADER: Failed to open vertex shader: " << path.vertex
-              << "\n";
+    LOG_ERROR("| ERROR: SHADER: Failed to open vertex shader: {}", path.vertex);
     return {}; // return default-constructed ShaderProgram
   }
   std::stringstream vShaderStream;
@@ -58,8 +59,8 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   // Load fragment shader
   std::ifstream fragmentShaderFile(path.fragment);
   if (!fragmentShaderFile.is_open()) {
-    std::cerr << "ERROR::SHADER: Failed to open fragment shader: "
-              << path.fragment << "\n";
+    LOG_ERROR("| ERROR: SHADER: Failed to open fragment shader: {}",
+              path.fragment);
     return {};
   }
   std::stringstream fShaderStream;
@@ -71,8 +72,8 @@ ShaderProgram ResourceManager::loadShaderFromFile(const ShaderPaths &path) {
   if (path.geometry != nullptr) {
     std::ifstream geometryShaderFile(path.geometry);
     if (!geometryShaderFile.is_open()) {
-      std::cerr << "ERROR::SHADER: Failed to open geometry shader: "
-                << path.geometry << "\n";
+      LOG_ERROR("| ERROR: SHADER: Failed to open geometry shader: {}",
+                path.geometry);
       return {};
     }
     std::stringstream gShaderStream;
@@ -108,7 +109,7 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
       stbi_load(file, &width, &height, &nrChannels, alpha ? 4 : 3);
 
   if (data == nullptr) {
-    std::cerr << "Failed to load texture: " << file << '\n';
+    LOG_WARN("Failed to load texture from file: {}", file);
     return texture;
   }
   generate_texture(texture, width, height, data);

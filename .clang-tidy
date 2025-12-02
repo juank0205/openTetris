@@ -10,4 +10,4 @@ Checks: >
   -readability-identifier-length
 
 WarningsAsErrors: '*'
-HeaderFilterRegex: '^(src|include)/'
+# HeaderFilterRegex: '^(src|include)/'

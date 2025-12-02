@@ -2,6 +2,7 @@
 #include "board.h"
 #include "game_constants.h"
 #include "glm/fwd.hpp"
+#include "logger.h"
 #include "resource_manager.h"
 #include "shader.h"
 #include "shape.h"
@@ -125,6 +126,7 @@ void Game::update(double deltaTime) {
 
   auto shapeTiles = currentShape.GetTilePositions();
   if (board.CheckShapeMovement(shapeTiles)) {
+    LOG_DEBUG("Shape landed");
     auto modifiedRows = board.PlaceShape(shapeTiles);
     int filledRow = board.CheckRows(modifiedRows);
     while (filledRow != BOARD_NO_ROW_CLEARED) {
@@ -163,6 +165,7 @@ void Game::processInput(double deltaTime) {
 }
 
 void Game::generateNewShape() {
+  LOG_DEBUG("Shape generated");
   const int shapeIndex = distr(gen);
   auto type = static_cast<ShapeType>(shapeIndex);
 

@@ -1,11 +1,11 @@
 #include "shader.h"
+#include "logger.h"
 
 #include <array>
 #include <csignal>
 #include <cstdint>
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
 #include <string>
 
 namespace {
@@ -44,11 +44,9 @@ void check_compile_errors(unsigned int object, const std::string &type) {
       glGetShaderInfoLog(object,
                          static_cast<int>(ShaderConstants::logBufferSize),
                          nullptr, infoLog.data());
-      std::cout
-          << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
-          << infoLog.data()
-          << "\n -- --------------------------------------------------- -- "
-          << '\n';
+      LOG_ERROR("| ERROR::SHADER: Compile-time error: Type: {}\n{}\n -- "
+                "--------------------------------------------------- --",
+                type, infoLog.data());
       debugBreak();
     }
   } else {
@@ -57,11 +55,10 @@ void check_compile_errors(unsigned int object, const std::string &type) {
       glGetProgramInfoLog(object,
                           static_cast<int>(ShaderConstants::logBufferSize),
                           nullptr, infoLog.data());
-      std::cout
-          << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
-          << infoLog.data()
-          << "\n -- --------------------------------------------------- -- "
-          << '\n';
+
+      LOG_ERROR("| ERROR::SHADER: Link-time error: Type: {}\n{}\n -- "
+                "--------------------------------------------------- --",
+                type, infoLog.data());
       debugBreak();
     }
   }
@@ -89,6 +86,7 @@ unsigned int compile_shader(const char *source, unsigned int type) {
     break;
   }
   check_compile_errors(id, shaderTypeName);
+  LOG_INFO("Compiled shader (id): {}", id);
   return id;
 }
 
