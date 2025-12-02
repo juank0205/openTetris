@@ -86,6 +86,7 @@ unsigned int compile_shader(const char *source, unsigned int type) {
     break;
   }
   check_compile_errors(id, shaderTypeName);
+  LOG_INFO("Compiled shader (id): {}", id);
   return id;
 }
 

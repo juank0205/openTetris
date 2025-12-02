@@ -53,20 +53,21 @@ GLFWwindow *create_window(int width, int height, const char *name,
                           std::array<bool, KEYS_ARRAY_SIZE> &keys) {
   GLFWwindow *window = glfwCreateWindow(width, height, name, nullptr, nullptr);
   if (window == nullptr) {
-    LOG_ERROR("Failed to initialize GLFW");
+    LOG_CRITICAL("Failed to initialize GLFW");
     glfwTerminate();
     return nullptr;
   }
   glfwMakeContextCurrent(window);
 
   if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == GL_FALSE) {
-    LOG_ERROR("Failed to initialize GLAD");
+    LOG_CRITICAL("Failed to initialize GLAD");
   }
 
   glfwSetWindowUserPointer(window, keys.data());
   glfwSetKeyCallback(window, key_callback);
   glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
 
+  LOG_TRACE("Window created! x: {0}, y: {0}", width, height);
   return window;
 }
 

@@ -1,4 +1,5 @@
 #include "board.h"
+#include "logger.h"
 #include "texture.h"
 
 #include <algorithm>
@@ -91,9 +92,11 @@ void Board::Draw(SpriteRenderer &renderer, Texture &texture) {
 bool Board::CheckCollision(const std::vector<TilePosition> &tiles) const {
   return std::ranges::any_of(tiles, [&](const TilePosition &tile) {
     if (tile.x < 0 || tile.x >= GRID_WIDTH) {
+      LOG_DEBUG("Wall collision");
       return true;
     }
     if (tile.y < 0 || tile.y >= GRID_HEIGHT) {
+      LOG_DEBUG("Wall collision");
       return true;
     }
     return boardStatus[tile.y][tile.x].active;

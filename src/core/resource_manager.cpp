@@ -5,7 +5,6 @@
 
 #include <fstream>
 #include <glad/glad.h>
-#include <iostream>
 #include <sstream>
 #include <stb_image/stb_image.h>
 #include <string>
@@ -13,6 +12,7 @@
 ShaderProgram &ResourceManager::LoadShader(const ShaderPaths &paths,
                                            const std::string &name) {
   shaders[name] = loadShaderFromFile(paths);
+  LOG_INFO("Loaded shader: {}", name);
   return shaders[name];
 }
 
@@ -23,6 +23,7 @@ ShaderProgram &ResourceManager::GetShader(const std::string &name) {
 Texture &ResourceManager::LoadTexture(const char *file, bool alpha,
                                       const std::string &name) {
   textures[name] = loadTextureFromFile(file, alpha);
+  LOG_INFO("Loaded texture: {}", name);
   return textures[name];
 }
 
@@ -108,7 +109,7 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
       stbi_load(file, &width, &height, &nrChannels, alpha ? 4 : 3);
 
   if (data == nullptr) {
-    std::cerr << "Failed to load texture: " << file << '\n';
+    LOG_WARN("Failed to load texture from file: {}", file);
     return texture;
   }
   generate_texture(texture, width, height, data);
