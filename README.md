@@ -81,13 +81,13 @@ If anything is missing, **CMake will tell you** during configuration.
 Executable path:
 
 ```
-{projectRoot}/bin/Linux64/Debug/OpenTetris
+{projectRoot}/bin/{presetName}/OpenTetris
 ```
 
 Run it:
 
 ```bash
-cd bin/Linux64/Debug
+cd bin/linux-debug
 ./OpenTetris
 ```
 
