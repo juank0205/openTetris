@@ -58,7 +58,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p release
-          cp -r /bin/* release/
+          cp -r bin/${{ matrix.preset }}/* release/
           zip -r ${{ matrix.artifact_name }}.zip release
 
       - name: Archive binaries (Windows)
