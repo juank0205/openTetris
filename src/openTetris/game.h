@@ -52,6 +52,7 @@ private:
   int height;
   const char *window_name;
   std::array<bool, KEYS_ARRAY_SIZE> keys = {false};
+  bool gameOver = false;
 
   double fallTimer = 0.0F;
   double fallInterval = FALL_INTERVAL; // seconds per automatic fall

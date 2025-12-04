@@ -45,7 +45,7 @@ void setup_world_coordinates(int windowWidth, int windowHeight,
 
 Game::Game(int width, int height, const char *window_name) // NOLINT
     : width(width), height(height), window_name(window_name),
-      currentShape(ShapeType::S, 0, 0) {}
+      currentShape(ShapeType::S, 0, 0), window(nullptr), sprite_renderer() {}
 
 void Game::Setup() {
   init_gl_context();
@@ -70,7 +70,7 @@ void Game::Run() {
   double deltaTime = 0.0F;
   double lastFrame = 0.0F;
 
-  while (check_window_status(window)) {
+  while (check_window_status(window) && !gameOver) {
     const double currentframe = glfwGetTime();
     deltaTime = currentframe - lastFrame;
     lastFrame = currentframe;
@@ -142,7 +142,7 @@ void Game::processInput(double deltaTime) {
   rotateTimer += deltaTime;
 
   auto validator = [&](const std::vector<TilePosition> &positions) {
-    return !board.CheckCollision(positions); // you implement this
+    return !board.CheckCollision(positions);
   };
 
   if (keys[GLFW_KEY_RIGHT] && moveTimer >= moveCooldown) {
@@ -165,7 +165,7 @@ void Game::processInput(double deltaTime) {
 }
 
 void Game::generateNewShape() {
-  LOG_DEBUG("Shape generated");
+
   const int shapeIndex = distr(gen);
   auto type = static_cast<ShapeType>(shapeIndex);
 
@@ -173,7 +173,25 @@ void Game::generateNewShape() {
   const int initialY = GRID_HEIGHT - 2; // top row (y increasing upwards)
 
   // Construct the new shape and set currentShape
-  currentShape = Shape(type, initialX, initialY);
+  Shape newShape = Shape(type, initialX, initialY);
+  LOG_DEBUG("Shape generated {}", newShape.GetType());
+
+  if (newShape.GetType() == ShapeType::I) {
+    // I shape spawns one row higher
+    newShape = Shape(type, initialX, initialY - 1);
+   }
+
+  auto validator = [&](const std::vector<TilePosition>& positions) {
+      return !board.CheckCollision(positions);
+   };
+
+  if (!validator(newShape.GetTilePositions())) {
+      LOG_INFO("Game Over detected");
+	  this->gameOver = true;
+  }
+
+  this->currentShape = std::move(newShape);
+
 }
 
 void Game::clean() {

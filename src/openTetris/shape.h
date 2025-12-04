@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <functional>
 #include <vector>
+#include <spdlog/fmt/fmt.h>
 
 /// Direction constants for moving shapes
 enum class MoveDirection : uint8_t {
@@ -27,6 +28,24 @@ enum class ShapeType : std::uint8_t {
   Z, ///< Z-shaped tetromino
   J, ///< J-shaped tetromino
   L  ///< L-shaped tetromino
+};
+
+template <>
+struct fmt::formatter<ShapeType> : fmt::formatter<std::string_view> {
+    auto format(ShapeType type, format_context& ctx) const {
+        std::string_view name;
+        switch (type) {
+        case ShapeType::I: name = "I"; break;
+        case ShapeType::O: name = "O"; break;
+        case ShapeType::T: name = "T"; break;
+        case ShapeType::S: name = "S"; break;
+        case ShapeType::Z: name = "Z"; break;
+        case ShapeType::J: name = "J"; break;
+        case ShapeType::L: name = "L"; break;
+        default: name = "Unknown"; break;
+        }
+        return fmt::formatter<std::string_view>::format(name, ctx);
+    }
 };
 
 /**
@@ -102,7 +121,15 @@ public:
    */
   void Draw(SpriteRenderer &renderer, Texture &texture);
 
+  /**
+   * @brief Gets the type of the shape.
+   *
+   * @return ShapeType of the tetromino.
+   */
+  ShapeType GetType() const { return type; }
+
 private:
-  TilePosition BasePosition;
-  std::vector<ShapeOffset> Tiles;
+  TilePosition basePosition;
+  std::vector<ShapeOffset> tiles;
+  ShapeType type;
 };

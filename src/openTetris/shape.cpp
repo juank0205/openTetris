@@ -6,70 +6,71 @@
 #include <vector>
 
 Shape::Shape(ShapeType type, int initialX, int initialY) {
-  glm::vec3 color;
+   glm::vec3 color = { 0, 0, 0 };
   switch (type) {
   case ShapeType::I:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = 0, .y = -1},
              {.x = 0, .y = 1},
              {.x = 0, .y = 2}};
     color = glm::vec3(0.0F, 1.0F, 1.0F); // Cyan
     break;
   case ShapeType::O:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = 1, .y = 0},
              {.x = 0, .y = -1},
              {.x = 1, .y = -1}};
     color = glm::vec3(1.0F, 1.0F, 0.0F); // Yellow
     break;
   case ShapeType::T:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = -1, .y = 0},
              {.x = 1, .y = 0},
              {.x = 0, .y = -1}};
     color = glm::vec3(0.6F, 0.0F, 0.6F); // Purple NOLINT
     break;
   case ShapeType::S:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = 1, .y = 0},
              {.x = 0, .y = -1},
              {.x = -1, .y = -1}};
     color = glm::vec3(0.0F, 1.0F, 0.0F); // Green
     break;
   case ShapeType::Z:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = -1, .y = 0},
              {.x = 0, .y = -1},
              {.x = 1, .y = -1}};
     color = glm::vec3(1.0F, 0.0F, 0.0F); // Red
     break;
   case ShapeType::J:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = 0, .y = -1},
              {.x = 0, .y = 1},
              {.x = -1, .y = 1}};
     color = glm::vec3(0.0F, 0.0F, 1.0F); // Blue
     break;
   case ShapeType::L:
-    Tiles = {{.x = 0, .y = 0},
+    tiles = {{.x = 0, .y = 0},
              {.x = 0, .y = -1},
              {.x = 0, .y = 1},
              {.x = 1, .y = 1}};
     color = glm::vec3(1.0F, 0.5F, 0.0F); // Orange NOLINT
     break;
   }
-  BasePosition = {.x = initialX, .y = initialY, .color = color};
+  basePosition = {.x = initialX, .y = initialY, .color = color};
+  this->type = type;
 }
 
 std::vector<TilePosition> Shape::GetTilePositions() {
   std::vector<TilePosition> tilesPos;
-  tilesPos.reserve(Tiles.size());
+  tilesPos.reserve(tiles.size());
 
-  for (auto &offset : Tiles) {
+  for (auto &offset : tiles) {
     TilePosition t;
-    t.x = BasePosition.x + offset.x;
-    t.y = BasePosition.y + offset.y;
-    t.color = BasePosition.color;
+    t.x = basePosition.x + offset.x;
+    t.y = basePosition.y + offset.y;
+    t.color = basePosition.color;
     tilesPos.push_back(t);
   }
 
@@ -77,7 +78,7 @@ std::vector<TilePosition> Shape::GetTilePositions() {
 }
 
 void Shape::Rotate(MoveDirection direction, const MoveValidator &validator) {
-  std::vector<ShapeOffset> newOffsets = Tiles;
+  std::vector<ShapeOffset> newOffsets = tiles;
 
   for (auto &offset : newOffsets) {
     const int oldX = offset.x;
@@ -95,27 +96,27 @@ void Shape::Rotate(MoveDirection direction, const MoveValidator &validator) {
   std::vector<TilePosition> newPositions;
   newPositions.reserve(newOffsets.size());
   for (auto &offset : newOffsets) {
-    newPositions.push_back({.x = BasePosition.x + offset.x,
-                            .y = BasePosition.y + offset.y,
-                            .color = BasePosition.color});
+    newPositions.push_back({.x = basePosition.x + offset.x,
+                            .y = basePosition.y + offset.y,
+                            .color = basePosition.color});
   }
 
   if (!validator(newPositions)) {
     return;
   }
 
-  Tiles = newOffsets;
+  tiles = newOffsets;
 }
 
 void Shape::Update(const MoveValidator &validator) {
-  TilePosition newBase = BasePosition;
+  TilePosition newBase = basePosition;
   newBase.y--;
   std::vector<TilePosition> newPositions;
-  newPositions.reserve(Tiles.size());
-  for (auto &offset : Tiles) {
+  newPositions.reserve(tiles.size());
+  for (auto &offset : tiles) {
     newPositions.push_back({.x = newBase.x + offset.x,
                             .y = newBase.y + offset.y,
-                            .color = BasePosition.color});
+                            .color = basePosition.color});
   }
 
   // Validate move
@@ -123,11 +124,11 @@ void Shape::Update(const MoveValidator &validator) {
     return;
   }
   // Commit move
-  BasePosition = newBase;
+  basePosition = newBase;
 }
 
 void Shape::Move(MoveDirection direction, const MoveValidator &validator) {
-  TilePosition newBase = BasePosition;
+  TilePosition newBase = basePosition;
 
   if (direction == MoveDirection::Right) {
     newBase.x++;
@@ -137,11 +138,11 @@ void Shape::Move(MoveDirection direction, const MoveValidator &validator) {
 
   // Predict new positions
   std::vector<TilePosition> newPositions;
-  newPositions.reserve(Tiles.size());
-  for (auto &offset : Tiles) {
+  newPositions.reserve(tiles.size());
+  for (auto &offset : tiles) {
     newPositions.push_back({.x = newBase.x + offset.x,
                             .y = newBase.y + offset.y,
-                            .color = BasePosition.color});
+                            .color = basePosition.color});
   }
 
   // Validate move
@@ -149,19 +150,19 @@ void Shape::Move(MoveDirection direction, const MoveValidator &validator) {
     return;
   }
   // Commit move
-  BasePosition = newBase;
+  basePosition = newBase;
 }
 
 void Shape::Draw(SpriteRenderer &renderer, Texture &texture) {
-  for (const auto &offset : Tiles) {
-    const glm::vec2 pos(static_cast<float>(BasePosition.x + offset.x),
-                        static_cast<float>(BasePosition.y + offset.y));
+  for (const auto &offset : tiles) {
+    const glm::vec2 pos(static_cast<float>(basePosition.x + offset.x),
+                        static_cast<float>(basePosition.y + offset.y));
 
     renderer.DrawSprite(texture,          // texture of the shape
                         {.position = pos, // position in grid coordinates
                          .size = glm::vec2(1.0F),     // size of one tile
                          .rotate = 0.0F,              // rotation
-                         .color = BasePosition.color} // tile color
+                         .color = basePosition.color} // tile color
     );
   }
 }
