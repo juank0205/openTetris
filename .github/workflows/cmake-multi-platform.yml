@@ -39,7 +39,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            cmake ninja-build clang++ pkg-config \
+            cmake ninja-build pkg-config \
             libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
             libgl1-mesa-dev mesa-common-dev \
             libwayland-dev libxkbcommon-dev wayland-protocols
@@ -53,12 +53,21 @@ jobs:
       - name: Run Tests
         run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure
 
-      - name: Archive binaries
+      - name: Archive binaries (Linux)
+        if: runner.os == 'Linux'
         shell: bash
         run: |
           mkdir -p release
-          cp -r bin/${{ matrix.preset }} release/
+          cp -r build/${{ matrix.preset }}/bin/* release/
           zip -r ${{ matrix.artifact_name }}.zip release
+
+      - name: Archive binaries (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release
+          Copy-Item -Path build/${{ matrix.preset }}/bin/* -Destination release -Recurse
+          Compress-Archive -Path release/* -DestinationPath ${{ matrix.artifact_name }}.zip -Force
 
       # Upload artifact
       - name: Upload artifact
