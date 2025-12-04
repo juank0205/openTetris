@@ -68,7 +68,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path release
-          Copy-Item -Path build/${{ matrix.preset }}/bin/* -Destination release -Recurse
+          Copy-Item -Path bin/${{ matrix.preset }}/* -Destination release -Recurse
           Compress-Archive -Path release/* -DestinationPath ${{ matrix.artifact_name }}.zip -Force
 
       # Upload artifact
