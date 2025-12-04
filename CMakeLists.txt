@@ -31,37 +31,8 @@ if (POLICY CMP0141)
 	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-
-include(FetchContent)
-# GLFW ----------------------------------------------------
-FetchContent_Declare(
-	glfw
-	GIT_REPOSITORY https://github.com/glfw/glfw
-	GIT_TAG 3.4
-)
-FetchContent_MakeAvailable(glfw)
-
-# GLM -----------------------------------------------------
-FetchContent_Declare(
-	glm
-	GIT_REPOSITORY https://github.com/g-truc/glm
-	GIT_TAG 1.0.2
-)
-FetchContent_MakeAvailable(glm)
-
-# SPDLOG  --------------------------------------------------
-FetchContent_Declare(
-    spdlog
-    GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG v1.16.0 
-)
-FetchContent_MakeAvailable(spdlog)
-
-# GLAD  ----------------------------------------------------
-add_subdirectory(external/glad)
-
-# STB_IMAGE ------------------------------------------------
-add_subdirectory(external/stb_image)
+# Enable testing
+enable_testing()
 
 # Static analysis ------------------------------------------
 option(ENABLE_CLANG_TIDY "Enable clang-tidy checks during build" OFF)
@@ -69,13 +40,7 @@ option(ENABLE_CLANG_TIDY "Enable clang-tidy checks during build" OFF)
 if(ENABLE_CLANG_TIDY)
     set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-warnings-as-errors=*")
 endif()
-include(ProcessorCount)
-ProcessorCount(NPROC)
-if(NOT NPROC EQUAL 0)
-    message(STATUS "Number of processor cores: ${NPROC}")
-else()
-    set(NPROC 1)
-endif()
+
 file(GLOB_RECURSE ALL_SRC_FILES 
     CONFIGURE_DEPENDS
     src/core/*.cpp 
@@ -88,12 +53,14 @@ foreach(src ${ALL_SRC_FILES})
     list(APPEND REL_SRC_FILES ${rel_src})
 endforeach()
 add_custom_target(clang-tidy
-	COMMAND run-clang-tidy -p ${CMAKE_BINARY_DIR} -j ${NPROC} ${REL_SRC_FILES}
+	COMMAND run-clang-tidy -p ${CMAKE_BINARY_DIR} ${REL_SRC_FILES}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running clang-tidy on all sources"
 )
 
-# add_subdirectory(src)
+add_subdirectory(external)
+
 add_subdirectory(src/core)
 add_subdirectory(src/openTetris)
 add_subdirectory(main)
+add_subdirectory(tests)
