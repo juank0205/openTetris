@@ -11,8 +11,8 @@
 				"CMAKE_C_COMPILER": "cl.exe",
 				"CMAKE_CXX_COMPILER": "cl.exe",
 				"CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/bin/${presetName}",
-				"CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/bin/${presetName}/libs",
-				"CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "${sourceDir}/bin/${presetName}"
+				"CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/bin/${presetName}",
+				"CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "${sourceDir}/bin/${presetName}/libs"
 			},
 			"condition": {
 				"type": "equals",
