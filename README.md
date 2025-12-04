@@ -9,7 +9,7 @@ Controls:
 
 ---
 
-# 🛠️ Build Instructions
+# Build Instructions
 
 This project uses **CMake**, so it must be installed on all platforms.  
 All build presets are defined in **CMakePresets.json** for both Debug and Release on Windows & Linux.
@@ -17,12 +17,12 @@ Running the project in WSL is possible as long as `wslg` is supported by your Wi
 
 ---
 
-# 🐧 Linux Build Guide
+# Linux Build Guide
 
 Most dependencies (GLFW, GLAD, etc.) are fetched by CMake automatically.  
 However, **some low-level system libraries must be installed manually** because they come from your distro.
 
-### 🧪 Full Ubuntu packages install
+### Full Ubuntu packages install
 
 ```bash
 sudo apt install cmake ninja-build clang++ pkg-config \
@@ -31,7 +31,7 @@ sudo apt install cmake ninja-build clang++ pkg-config \
   libwayland-dev libxkbcommon-dev wayland-protocols
 ```
 
-### 📦 Required System Packages explanation
+### Required System Packages explanation
 
 The previous command installed the following packages:
 
@@ -65,19 +65,18 @@ These provide `<GL/gl.h>` and Mesa’s OpenGL implementation.
 - Arch → included in `mesa`
 - Fedora → `mesa-libGL-devel`
 
-## 🔨 Building the project
+## Building the project
 
 Run the following command from the root of the project:
 
 ```bash
 cmake --preset=linux-debug
-cd build/linux-debug
-ninja
+ninja -C build/linux-debug
 ```
 
 If anything is missing, **CMake will tell you** during configuration.
 
-## ▶️ Running
+## Running
 
 Executable path:
 
@@ -94,20 +93,20 @@ cd bin/Linux64/Debug
 
 ---
 
-# 🪟 Windows Build Guide
+# Windows Build Guide
 
 This project uses **MSVC** and was tested on:
 
 - Visual Studio 2022
 - Visual Studio 2026 Preview
 
-### 📁 Opening the project
+### Opening the project
 
 Use:
 
 **File → Open → Folder…**
 
-❌ *Do NOT use “Open Solution File”* — this is a pure CMake project.
+*Do NOT use “Open Solution File”* — this is a pure CMake project.
 
 Visual Studio will automatically detect the available presets (Debug/Release, x86/x64).  
 You can then build and run directly from the IDE.
