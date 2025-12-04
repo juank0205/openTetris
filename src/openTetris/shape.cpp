@@ -76,13 +76,13 @@ std::vector<TilePosition> Shape::GetTilePositions() {
   return tilesPos;
 }
 
-void Shape::Rotate(unsigned int direction, const MoveValidator &validator) {
+void Shape::Rotate(MoveDirection direction, const MoveValidator &validator) {
   std::vector<ShapeOffset> newOffsets = Tiles;
 
   for (auto &offset : newOffsets) {
     const int oldX = offset.x;
     const int oldY = offset.y;
-    if (direction == SHAPE_DIRECTION_RIGHT) {
+    if (direction == MoveDirection::Right) {
       offset.x = oldY;
       offset.y = -oldX;
     } else {
@@ -126,12 +126,12 @@ void Shape::Update(const MoveValidator &validator) {
   BasePosition = newBase;
 }
 
-void Shape::Move(unsigned int direction, const MoveValidator &validator) {
+void Shape::Move(MoveDirection direction, const MoveValidator &validator) {
   TilePosition newBase = BasePosition;
 
-  if (direction == SHAPE_DIRECTION_RIGHT) {
+  if (direction == MoveDirection::Right) {
     newBase.x++;
-  } else if (direction == SHAPE_DIRECTION_LEFT) {
+  } else if (direction == MoveDirection::Left) {
     newBase.x--;
   }
 

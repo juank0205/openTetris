@@ -1,0 +1,65 @@
+#---------------------------------------------------------------------------
+# Project information
+#---------------------------------------------------------------------------
+
+PROJECT_NAME           = "OpenTetris"
+PROJECT_BRIEF          = "A simple Tetris clone using C++ and OpenGL"
+
+#---------------------------------------------------------------------------
+# Output directory (this is what you asked for)
+#---------------------------------------------------------------------------
+
+# This puts generated docs inside /docs/html and /docs/latex
+OUTPUT_DIRECTORY       = @CMAKE_SOURCE_DIR@/docs
+
+#---------------------------------------------------------------------------
+# Input sources (CMake fills these paths in)
+#---------------------------------------------------------------------------
+
+INPUT                  = @CMAKE_SOURCE_DIR@/src \
+                         @CMAKE_SOURCE_DIR@/include
+
+RECURSIVE              = YES
+
+#---------------------------------------------------------------------------
+# Build settings
+#---------------------------------------------------------------------------
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+
+#---------------------------------------------------------------------------
+# Documentation extraction behavior
+#---------------------------------------------------------------------------
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+
+#---------------------------------------------------------------------------
+# Source code options
+#---------------------------------------------------------------------------
+
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+OPTIMIZE_FOR_CPLUSPLUS = YES
+
+# Show code snippets in the docs
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+
+#---------------------------------------------------------------------------
+# Graphics / diagrams
+#---------------------------------------------------------------------------
+
+HAVE_DOT               = NO
+
+#---------------------------------------------------------------------------
+# Misc
+#---------------------------------------------------------------------------
+
+QUIET                  = NO
+WARNINGS               = YES

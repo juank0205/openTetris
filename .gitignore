@@ -4,3 +4,8 @@ bin/
 build/
 logs/
 TestResults/
+Testing/
+docs/html
+docs/latex
+docs/xml
+docs/man

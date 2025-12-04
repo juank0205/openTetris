@@ -146,20 +146,20 @@ void Game::processInput(double deltaTime) {
   };
 
   if (keys[GLFW_KEY_RIGHT] && moveTimer >= moveCooldown) {
-    currentShape.Move(SHAPE_DIRECTION_RIGHT, validator);
+    currentShape.Move(MoveDirection::Right, validator);
     moveTimer = 0.0F;
   }
   if (keys[GLFW_KEY_LEFT] && moveTimer >= moveCooldown) {
-    currentShape.Move(SHAPE_DIRECTION_LEFT, validator);
+    currentShape.Move(MoveDirection::Left, validator);
     moveTimer = 0.0F;
   }
 
   if (keys[GLFW_KEY_X] && rotateTimer >= rotateCooldown) {
-    currentShape.Rotate(SHAPE_DIRECTION_RIGHT, validator);
+    currentShape.Rotate(MoveDirection::Right, validator);
     rotateTimer = 0.0F;
   }
   if (keys[GLFW_KEY_Z] && rotateTimer >= rotateCooldown) {
-    currentShape.Rotate(SHAPE_DIRECTION_LEFT, validator);
+    currentShape.Rotate(MoveDirection::Left, validator);
     rotateTimer = 0.0F;
   }
 }

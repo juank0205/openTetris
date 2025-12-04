@@ -10,9 +10,27 @@
 
 class Game {
 public:
+  /**
+   * @brief Constructs the game with a given window size and title.
+   *
+   * @param width Width of the game window in pixels.
+   * @param height Height of the game window in pixels.
+   * @param window_name Title of the game window.
+   */
   Game(int width, int height, const char *window_name);
 
+  /**
+   * @brief Sets up the game resources and initializes the first state.
+   *
+   * Loads textures, shaders, and prepares the board and initial shape.
+   */
   void Setup();
+
+  /**
+   * @brief Runs the main game loop until the window is closed.
+   *
+   * Handles input, updates the game state, and renders each frame.
+   */
   void Run();
 
 private:

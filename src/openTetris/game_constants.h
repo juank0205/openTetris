@@ -1,10 +1,10 @@
 #pragma once
 
-#define BOARD_WIDTH_PIXELS 250
-#define BOARD_HEIGHT_PIXELS 450
-#define GRID_HEIGHT 20
-#define GRID_WIDTH 10
-#define FALL_INTERVAL 0.15F
-#define MOVE_COOLDOWN 0.1F
-#define ROTATE_COOLDOWN 0.2F
-#define SHAPES_NUMBER 6
+constexpr int BOARD_WIDTH_PIXELS = 250;
+constexpr int BOARD_HEIGHT_PIXELS = 450;
+constexpr int GRID_WIDTH  = 10;
+constexpr int GRID_HEIGHT = 20;
+constexpr double FALL_INTERVAL = 0.15F;
+constexpr double MOVE_COOLDOWN = 0.1F;
+constexpr double ROTATE_COOLDOWN = 0.2F;
+constexpr int SHAPES_NUMBER = 6;
