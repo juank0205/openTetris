@@ -17,6 +17,16 @@ file(GLOB TEST_FILES "*.cpp")
 # Create a single test executable with all test files
 add_executable(${PROJECT_NAME}_tests ${TEST_FILES})
 
+# Disable clang-tidy for test targets
+set_target_properties(${PROJECT_NAME}_tests PROPERTIES CXX_CLANG_TIDY "")
+
+# Disable clang-tidy for GoogleTest targets
+foreach(t gtest gtest_main gmock gmock_main)
+    if(TARGET ${t})
+        set_target_properties(${t} PROPERTIES CXX_CLANG_TIDY "")
+    endif()
+endforeach()
+
 # Include directories
 target_include_directories(${PROJECT_NAME}_tests PRIVATE 
     ${CMAKE_SOURCE_DIR}/include

@@ -21,9 +21,6 @@ if (POLICY CMP0141)
 	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-# Enable testing
-enable_testing()
-
 # Static analysis ------------------------------------------
 option(ENABLE_CLANG_TIDY "Enable clang-tidy checks during build" OFF)
 
@@ -66,10 +63,15 @@ else()
     message(STATUS "Doxygen not found, documentation target will not be available")
 endif()
 
-
 add_subdirectory(external)
 
 add_subdirectory(src/core)
 add_subdirectory(src/openTetris)
 add_subdirectory(main)
-add_subdirectory(tests)
+
+option(ENABLE_TESTING "Build unit tests" OFF)
+
+if (ENABLE_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
