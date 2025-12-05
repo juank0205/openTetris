@@ -110,3 +110,9 @@ Use:
 
 Visual Studio will automatically detect the available presets (Debug/Release, x86/x64).  
 You can then build and run directly from the IDE.
+
+# Additional CMake Flags
+To enable extra features as static code analysis or testing, the flags ENABLE_TESTING and ENABLE_CLANG_TIDY are available to configure the project. You can use them as"
+```bash
+cmake --preset build/linux-debug -DENABLE_TESTING=ON -DENABLE_CLANG_TIDY=ON
+```
