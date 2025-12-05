@@ -116,3 +116,10 @@ To enable extra features as static code analysis or testing, the flags ENABLE_TE
 ```bash
 cmake --preset build/linux-debug -DENABLE_TESTING=ON -DENABLE_CLANG_TIDY=ON
 ```
+
+# Generate Documentation
+If Doxygen is available in your system, you can run the gen_docs target to automatically generate http files including useful documentation. 
+```bash
+ninja -C build/linux-debug gen_docs
+```
+Then you can open the `docs/html/index/html` file in your browser.
