@@ -22,6 +22,9 @@ jobs:
       - name: Configure project
         run: cmake --preset=linux-release
 
+      - name: Build project
+        run: cmake --build build/linux-release
+
       - name: Run Clang-Tidy
         run: |
           # Find all source/header files
@@ -29,3 +32,7 @@ jobs:
           for f in $FILES; do
             clang-tidy -p build/ "$f"
           done
+
+      - name: Run Tests
+        run: ctest --test-dir build/linux-release --output-on-failure
+
