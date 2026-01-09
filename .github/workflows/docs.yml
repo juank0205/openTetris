@@ -1,0 +1,37 @@
+name: Generate Docs
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docs:
+    name: Build & Publish Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - uses: actions/checkout@v4
+
+      # 2. Install dependencies
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+      # 3. Configure CMake
+      - name: Configure CMake
+        run: cmake --preset=linux-release
+
+      # 4. Build the gen_docs target
+      - name: Build Documentation
+        run: cmake --build build/linux-release --target gen_docs
+
+      # 5. Publish docs to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/linux-release/docs/html
