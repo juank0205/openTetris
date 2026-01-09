@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - "**"  
+jobs:
+  lint:
+    name: Clang-Tidy Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy cmake build-essential
+
+      - name: Configure project
+        run: cmake --preset=linux-release
+
+      - name: Run Clang-Tidy
+        run: |
+          # Find all source/header files
+          FILES=$(find src/ -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \))
+          for f in $FILES; do
+            clang-tidy -p build/ "$f"
+          done
