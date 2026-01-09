@@ -34,12 +34,12 @@ jobs:
       - name: Install dependencies (Linux only)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
+          sudo apt-get update         
           sudo apt-get install -y \
             cmake ninja-build pkg-config \
             libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
             libgl1-mesa-dev mesa-common-dev \
-            libwayland-dev wayland-protocols wayland-protocols-dev \
+            libwayland-dev libxkbcommon-dev wayland-protocols \
             clang-tidy build-essential
 
       # Configure CMake (generates compile_commands.json)
