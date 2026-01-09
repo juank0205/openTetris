@@ -13,7 +13,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy cmake build-essential
+          sudo apt-get install -y \
+            cmake  clang-tidy build-essential ninja-build pkg-config \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+            libgl1-mesa-dev mesa-common-dev \
+            libwayland-dev libxkbcommon-dev wayland-protocols
 
       - name: Configure project
         run: cmake --preset=linux-release
