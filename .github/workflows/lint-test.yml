@@ -1,0 +1,63 @@
+on:
+  push:
+    branches:
+      - "**"  
+
+permissions:
+  contents: write
+  
+jobs:
+  build-lint-test:
+    name: Build, Clang-Tidy & Test on ${{ matrix.preset }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            preset: linux-release
+            artifact_name: linux-release
+          - os: windows-latest
+            preset: x64-release
+            artifact_name: windows-x64-release
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Windows-specific setup
+      - name: Set up MSVC (Windows only)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # Linux dependencies
+      - name: Install dependencies (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake ninja-build pkg-config \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+            libgl1-mesa-dev mesa-common-dev \
+            libwayland-dev wayland-protocols wayland-protocols-dev \
+            clang-tidy build-essential
+
+      # Configure CMake (generates compile_commands.json)
+      - name: Configure
+        run: cmake --preset=${{ matrix.preset }}
+
+      # Build project
+      - name: Build
+        run: cmake --build build/${{ matrix.preset }}
+
+      # Run clang-tidy
+      - name: Clang-Tidy
+        run: |
+          FILES=$(find src/ -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \))
+          for f in $FILES; do
+            clang-tidy -p build/${{ matrix.preset }} "$f"
+          done
+
+      # Run tests
+      - name: Run Tests
+        run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure
