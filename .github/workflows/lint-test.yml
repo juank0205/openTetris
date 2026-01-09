@@ -53,10 +53,19 @@ jobs:
       # Run clang-tidy
       - name: Clang-Tidy
         run: |
-          FILES=$(find src/ -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \))
-          for f in $FILES; do
-            clang-tidy -p build/${{ matrix.preset }} "$f"
-          done
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            FILES=$(find src/ -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \))
+            for f in $FILES; do
+              clang-tidy -p build/${{ matrix.preset }} "$f"
+            done
+          else
+            # Windows PowerShell version
+            $Files = Get-ChildItem -Recurse -Include *.cpp,*.cxx,*.cc,*.c,*.h,*.hpp src
+            foreach ($f in $Files) {
+              clang-tidy -p build/${{ matrix.preset }} $f.FullName
+            }
+          fi
+        shell: bash
 
       # Run tests
       - name: Run Tests
