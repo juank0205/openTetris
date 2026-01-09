@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "x64-debug-testing",
+      "inherits": "x64-debug",
+      "cacheVariables": {
+        "ENABLE_TESTING": "ON",
+        "ENABLE_CLANG_TIDY":  "OFF"
+      }
+    }
+  ]
+}

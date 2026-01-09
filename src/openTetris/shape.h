@@ -126,7 +126,7 @@ public:
    *
    * @return ShapeType of the tetromino.
    */
-  ShapeType GetType() const { return type; }
+  [[nodiscard]] ShapeType GetType() const { return type; }
 
 private:
   TilePosition basePosition;
